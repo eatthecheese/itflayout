@@ -1,64 +1,40 @@
-<!DOCTYPE html>
-<html>
+{{define "title"}}List of SCs{{end}}
+
+{{define "heading"}}
 <h1>List of SCs</h1>
-<head>
-    <style>
-        h1 {
-            font-family: arial, sans-serif;
-        }
+{{end}}
 
-        table {
-            font-family: arial, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-        }
-        
-        td, th {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
-        
-        tr:nth-child(even) {
-            background-color: #dddddd;
-        }
-        </style>
-</head>
+{{define "body"}}
+<table>
+    <tr>
+        <th>IP Address</th>
+        <th>Location Name</th>
+        <th>NLC</th>
+        <th>SC No.</th>
+        <th>Transport Mode</th>
+    </tr>
+    <tr>
+        <td>192.168.181.14</td>
+        <td><div contenteditable="true">Edit me</div></td>
+        <td id="14nlc">281</td>
+        <td id="14sc">344</td>
+        <td>Rail</td>
+    </tr>
+    <tr>
+        <td>192.168.181.15</td>
+        <td>Domestic</td>
+        <td>228</td>
+        <td>343</td>
+        <td>Rail</td>
+    </tr>
+    <tr>
+        <td>192.168.181.16</td>
+        <td>Wickham</td>
+        <td>517</td>
+        <td>313</td>
+        <td>Rail</td>
+    </tr>
+</table>
 
-<body>
-
-    <!List of SCs table here, it's a mess I know>
-    <table>
-        <tr>
-            <th>IP Address</th>
-            <th>Location Name</th>
-            <th>NLC</th>
-            <th>SC No.</th>
-            <th>Transport Mode</th>
-        </tr>
-        <tr>
-            <td>192.168.181.14</td>
-            <td><div contenteditable>Edit me</div></div></td>
-            <td id="14nlc">281</td>
-            <td id="14sc">344</td>
-            <td>Rail</td>
-        </tr>
-        <tr>
-            <td>192.168.181.15</td>
-            <td>Domestic</td>
-            <td>228</td>
-            <td>343</td>
-            <td>Rail</td>
-        </tr>
-        <tr>
-            <td>192.168.181.16</td>
-            <td>Wickham</td>
-            <td>517</td>
-            <td>313</td>
-            <td>Rail</td>
-        </tr>
-    </table>
-
-    <button type="button" onclick='document.getElementById("14nlc").innerHTML = "over 9000"'>Click Me!</button>
-</body>
-</html>
+<button type="button" onclick='document.getElementById("14nlc").innerHTML = "over 9000"'>Click Me!</button>
+{{end}}

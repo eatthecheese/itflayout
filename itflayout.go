@@ -10,11 +10,11 @@ import (
 
 func handleIndex(w http.ResponseWriter, req *http.Request) {
 	// below code is from http://www.alexedwards.net/blog/serving-static-sites-with-go
-	lp := filepath.Join("templates", "listofscs.html")
-	fp := filepath.Join("templates", filepath.Clean(req.URL.Path))
+	lp := filepath.Join("static/templates", "layout.html")
+	fp := filepath.Join("static/templates", filepath.Clean(req.URL.Path))
 
 	t, _ := template.ParseFiles(lp, fp)
-	t.ExecuteTemplate(w, "listofscs", nil)
+	t.ExecuteTemplate(w, "layout", nil)
 }
 
 func main() {
@@ -23,5 +23,4 @@ func main() {
 
 	http.HandleFunc("/", handleIndex)
 	http.ListenAndServe(":8080", nil)
-
 }
