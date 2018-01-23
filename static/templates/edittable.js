@@ -1,3 +1,5 @@
-function myFunction(p1, p2) {
-    return p1 * p2;              // The function returns the product of p1 and p2
-}
+$('document').ready(function() {
+    $('.add_another').click(function() {
+        $("#tbl").append('<tr><td><input type="text" class="txtbox" value="" />  </td><td><input type="text" class="txtbox" value="" /></td><td><input type="text" class="txtbox" value="" /></td></tr>');
+     });
+  })
