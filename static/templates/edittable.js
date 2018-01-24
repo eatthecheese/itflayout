@@ -1,5 +1,7 @@
-$('document').ready(function() {
-    $('.add_another').click(function() {
-        $("#tbl").append('<tr><td><input type="text" class="txtbox" value="" />  </td><td><input type="text" class="txtbox" value="" /></td><td><input type="text" class="txtbox" value="" /></td></tr>');
-     });
-  })
+function edit_row(id) {
+    var cur_location=document.getElementById("location"+id).innerHTML;
+
+    document.getElementById("location"+id).innerHTML="<input type='text' id='location_text"+id+"' value='"+cur_location+"'>";
+
+    document.getElementById("edit_button"+id).style.display="none";
+}

@@ -1,9 +1,54 @@
 <html>
     <head>
       <meta charset="utf-8">
-      <title>Table Gen 0.1</title>
+      <title>ITF - List of SCs</title>
       <link rel="stylesheet" href="/static/stylesheets/main.css">
-    
+        <script type="text/javascript">
+            function edit_row(id) {
+                var cur_ip=document.getElementById("ip"+id).innerHTML;
+                var cur_location=document.getElementById("location"+id).innerHTML;
+                var cur_version=document.getElementById("version"+id).innerHTML;
+                var cur_nlc=document.getElementById("nlc"+id).innerHTML;
+                var cur_scnumber=document.getElementById("scnumber"+id).innerHTML;
+                var cur_transportmode=document.getElementById("transportmode"+id).innerHTML;
+                var cur_environment=document.getElementById("environment"+id).innerHTML;
+                var cur_priconc=document.getElementById("priconc"+id).innerHTML;
+                var cur_secconc=document.getElementById("secconc"+id).innerHTML;
+                var cur_devicesactive=document.getElementById("devicesactive"+id).innerHTML;
+                var cur_id = id.toString();
+
+                document.getElementById("ip"+id).innerHTML="<input type='hidden' name='new_id"+id+"' value='"+cur_id+"'><input type='hidden' id='ip_text"+id+"' name='new_ip"+id+"' value='"+cur_ip+"'>";
+                document.getElementById("location"+id).innerHTML="<input type='text' id='location_text"+id+"' name='new_location"+id+"' value='"+cur_location+"'>";
+                document.getElementById("version"+id).innerHTML="<input type='text' id='version_text"+id+"' name='new_version"+id+"' value='"+cur_version+"'>";
+                document.getElementById("nlc"+id).innerHTML="<input type='text' id='nlc_text"+id+"' name='new_nlc"+id+"' value='"+cur_nlc+"'>";
+                document.getElementById("scnumber"+id).innerHTML="<input type='text' id='scnumber_text"+id+"' name='new_scnumber"+id+"' value='"+cur_scnumber+"'>";
+                document.getElementById("transportmode"+id).innerHTML="<input type='text' id='transportmode_text"+id+"' name='new_transportmode"+id+"' value='"+cur_transportmode+"'>";
+                document.getElementById("environment"+id).innerHTML="<input type='text' id='environment_text"+id+"' name='new_environment"+id+"' value='"+cur_environment+"'>";
+                document.getElementById("priconc"+id).innerHTML="<input type='text' id='priconc_text"+id+"' name='new_priconc"+id+"' value='"+cur_priconc+"'>";
+                document.getElementById("secconc"+id).innerHTML="<input type='text' id='secconc_text"+id+"' name='new_secconc"+id+"' value='"+cur_secconc+"'>";
+                document.getElementById("devicesactive"+id).innerHTML="<input type='text' id='devicesactive_text"+id+"' name='new_devicesactive"+id+"' value='"+cur_devicesactive+"'>";
+
+                document.getElementById("edit_button"+id).style.display="none";
+                document.getElementById("save_button"+id).style.display="block";
+            }
+
+            function save_row(id) {
+                var new_ip=document.getElementById("ip"+id).value;
+                var new_location=document.getElementById("location"+id).value;
+                var new_version=document.getElementById("version"+id).value;
+                var new_nlc=document.getElementById("nlc"+id).value;
+                var new_scnumber=document.getElementById("scnumber"+id).value;
+                var new_transportmode=document.getElementById("transportmode"+id).value;
+                var new_environment=document.getElementById("environment"+id).value;
+                var new_priconc=document.getElementById("priconc"+id).value;
+                var new_secconc=document.getElementById("secconc"+id).value;
+                var new_devicesactive=document.getElementById("devicesactive"+id).value;
+                
+
+                document.getElementById("formtable").submit();
+            }
+            
+        </script>
       <style>
         h1 {
             font-family: arial, sans-serif;
@@ -16,28 +61,49 @@
         }
         
         td, th {
-            border: 1px solid #dddddd;
+            border: 1px solid #ffffff;
             text-align: left;
             padding: 8px;
         }
         
         tr:nth-child(even) {
-            background-color: #dddddd;
+            background-color: #dadada;
         }
         </style>
     </head>
     <body>
-        <table>
+        <h1>List of SCs</h1>
+        <form id="formtable" action="" method="post"><table>
             <tr>
-                <th>Ip</th>
+                <th>IP</th>
                 <th>Location Name</th>
+                <th>SC Version</th>
+                <th>NLC</th>
+                <th>SC</th>
+                <th>Transport Mode</th>
+                <th>Environment</th>
+                <th>DGC Pri Conc</th>
+                <th>DGC Sec Conc</th>
+                <th>Devices?</th>
             </tr>
-            {{range .Ip}}
-            <tr>
-                <td>{{.}}</td>
-                <td>location</td>
+            {{range .}}
+            <tr id="row{{.Scid}}">
+                <td id="ip{{.Scid}}">{{.Ip}}</td>
+                <td id="location{{.Scid}}">{{.Location}}</td>
+                <td id="version{{.Scid}}">{{.Version}}</td>
+                <td id="nlc{{.Scid}}">{{.Nlc}}</td>
+                <td id="scnumber{{.Scid}}">{{.Scnumber}}</td>
+                <td id="transportmode{{.Scid}}">{{.Transportmode}}</td>
+                <td id="environment{{.Scid}}">{{.Environment}}</td>
+                <td id="priconc{{.Scid}}">{{.Priconc}}</td>
+                <td id="secconc{{.Scid}}">{{.Secconc}}</td>
+                <td id="devicesactive{{.Scid}}">{{.Devicesactive}}</td>
+                <td>
+                    <input type="button" id="edit_button{{.Scid}}" value="Edit" class="edit_button" onclick="edit_row('{{.Scid}}')">
+                    <input type='button' id="save_button{{.Scid}}" value="Save" class="save_button" onclick="save_row('{{.Scid}}')">
+                </td>
             </tr>
             {{end}}
-        </table>
+        </table></form>
     </body>
 </html>
