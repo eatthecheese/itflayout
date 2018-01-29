@@ -1,0 +1,118 @@
+<html>
+    <head>
+        <title>ITF - List of Gates and FLRs</title>
+        <style>
+            h1 {
+                font-family: arial, sans-serif;
+            }
+        
+            table {
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
+            
+            td, th {
+                border: 1px solid #ffffff;
+                text-align: left;
+                padding: 8px;
+            }
+            
+            tr:nth-child(even) {
+                background-color: #dadada;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>List of FLRs and Gates</h1>
+        <ul>
+            <li><a href="/itf/">List of SCs</a></li>
+            <li><a href="/itf/">List of Bus Rigs</a></li>
+        </ul> 
+        <h2>Legacy Gates</h2>
+        <table>
+            <tr>
+                <th>IP</th>
+                <th>SC IP</th>
+                <th>Location</th>
+                <th>Environment</th>
+                <th>Transport Mode</th>
+                <th>Device (RTD) Version</th>
+                <th>Plinth</th>
+                <th>EPROM</th>
+                <th>DOPP Port</th>
+                <th>DOPP IP</th>
+            </tr>
+            {{range .}}
+                {{if .IsRLG}}
+                <tr>
+                    <td>{{.Ip}}</td>
+                    <td>{{.ParentSc.Ip}}</td>
+                    <td>{{.ParentSc.Location}}</td>
+                    <td>{{.ParentSc.Environment}}</td>
+                    <td>{{.ParentSc.Transportmode}}</td>
+                    <td>{{.VersionDevice}} ({{.VersionRtd}})</td>
+                    <td>{{.Plinth}}</td>
+                    <td>{{.VersionEprom}}</td>
+                    <td>{{.DoppPort}}</td>
+                    <td>{{.DoppIp}}</td>
+                </tr>
+                {{end}}
+            {{end}}
+        </table>
+        <h2>E2 Gates</h2>
+        <table>
+            <tr>
+                <th>IP</th>
+                <th>SC IP</th>
+                <th>Location</th>
+                <th>Environment</th>
+                <th>Transport Mode</th>
+                <th>Device (RTD) Version</th>
+                <th>Plinth</th>
+            </tr>
+            {{range .}}
+                {{if .IsE2Gate}}
+                <tr>
+                    <td>{{.Ip}}</td>
+                    <td>{{.ParentSc.Ip}}</td>
+                    <td>{{.ParentSc.Location}}</td>
+                    <td>{{.ParentSc.Environment}}</td>
+                    <td>{{.ParentSc.Transportmode}}</td>
+                    <td>{{.VersionDevice}} ({{.VersionRtd}})</td>
+                    <td>{{.Plinth}}</td>
+                </tr>
+                {{end}}
+            {{end}}
+        </table>
+        <h2>Fixed Location Readers</h2>
+        <table>
+            <tr>
+                <th>IP</th>
+                <th>SC IP</th>
+                <th>Location</th>
+                <th>Environment</th>
+                <th>Transport Mode</th>
+                <th>Device (RTD) Version</th>
+                <th>Plinth</th>
+                <th>DOPP Port</th>
+                <th>DOPP IP</th>
+            </tr>
+            {{range .}}
+                {{if .IsFLR}}
+                <tr>
+                    <td>{{.Ip}}</td>
+                    <td>{{.ParentSc.Ip}}</td>
+                    <td>{{.ParentSc.Location}}</td>
+                    <td>{{.ParentSc.Environment}}</td>
+                    <td>{{.ParentSc.Transportmode}}</td>
+                    <td>{{.VersionDevice}} ({{.VersionRtd}})</td>
+                    <td>{{.Plinth}}</td>
+                    <td>{{.DoppPort}}</td>
+                    <td>{{.DoppIp}}</td>
+                </tr>
+                {{end}}
+            {{end}}
+        </table>
+    </body>
+</html>

@@ -2,7 +2,6 @@
     <head>
       <meta charset="utf-8">
       <title>ITF - List of SCs</title>
-      <link rel="stylesheet" href="/static/stylesheets/main.css">
         <script type="text/javascript">
             function edit_row(id) {
                 var cur_ip=document.getElementById("ip"+id).innerHTML;
@@ -17,7 +16,8 @@
                 var cur_devicesactive=document.getElementById("devicesactive"+id).innerHTML;
                 var cur_id = id.toString();
 
-                document.getElementById("ip"+id).innerHTML="<input type='hidden' name='new_id"+id+"' value='"+cur_id+"'><input type='hidden' id='ip_text"+id+"' name='new_ip"+id+"' value='"+cur_ip+"'>";
+                document.getElementById("ip"+id).innerHTML="<input type='text' id='ip_text"+id+"' name='new_ip"+id+"' value='"+cur_ip+"'>";
+                document.getElementById("formdummy").innerHTML="<input type='hidden' name='id' value='"+cur_id+"'>";
                 document.getElementById("location"+id).innerHTML="<input type='text' id='location_text"+id+"' name='new_location"+id+"' value='"+cur_location+"'>";
                 document.getElementById("version"+id).innerHTML="<input type='text' id='version_text"+id+"' name='new_version"+id+"' value='"+cur_version+"'>";
                 document.getElementById("nlc"+id).innerHTML="<input type='text' id='nlc_text"+id+"' name='new_nlc"+id+"' value='"+cur_nlc+"'>";
@@ -28,7 +28,10 @@
                 document.getElementById("secconc"+id).innerHTML="<input type='text' id='secconc_text"+id+"' name='new_secconc"+id+"' value='"+cur_secconc+"'>";
                 document.getElementById("devicesactive"+id).innerHTML="<input type='text' id='devicesactive_text"+id+"' name='new_devicesactive"+id+"' value='"+cur_devicesactive+"'>";
 
-                document.getElementById("edit_button"+id).style.display="none";
+                document.getElementById("edit_button0").style.display="none";
+                {{range .}}
+                    document.getElementById("edit_button"+{{.Scid}}).style.display="none";
+                {{end}}
                 document.getElementById("save_button"+id).style.display="block";
             }
 
@@ -46,8 +49,7 @@
                 
 
                 document.getElementById("formtable").submit();
-            }
-            
+            }            
         </script>
       <style>
         h1 {
@@ -73,6 +75,10 @@
     </head>
     <body>
         <h1>List of SCs</h1>
+        <ul>
+            <li><a href="./devices">List of FLRs and Gates</a></li>
+            <li><a href="./devices">List of Bus Rigs</a></li>
+        </ul>
         <form id="formtable" action="" method="post"><table>
             <tr>
                 <th>IP</th>
@@ -100,10 +106,28 @@
                 <td id="devicesactive{{.Scid}}">{{.Devicesactive}}</td>
                 <td>
                     <input type="button" id="edit_button{{.Scid}}" value="Edit" class="edit_button" onclick="edit_row('{{.Scid}}')">
-                    <input type='button' id="save_button{{.Scid}}" value="Save" class="save_button" onclick="save_row('{{.Scid}}')">
+                    <input hidden type='button' id="save_button{{.Scid}}" value="Save" class="save_button" onclick="save_row('{{.Scid}}')">
                 </td>
             </tr>
             {{end}}
-        </table></form>
+            <!-- '0' is a magic number for a new row, go handler takes care of this -->
+            <tr id="row0">
+                <td id="ip0"></td>
+                <td id="location0"></td>
+                <td id="version0"></td>
+                <td id="nlc0"></td>
+                <td id="scnumber0"></td>
+                <td id="transportmode0"></td>
+                <td id="environment0"></td>
+                <td id="priconc0"></td>
+                <td id="secconc0"></td>
+                <td id="devicesactive0"></td>
+                <td>
+                    <input type="button" id="edit_button0" value="Add" class="edit_button" onclick="edit_row('0')">
+                    <input hidden type="button" id="save_button0" value="Save" class="save_button" onclick="save_row('0')">
+                </td>
+            </tr>
+        </table>
+        <p id="formdummy"></p></form>
     </body>
 </html>
