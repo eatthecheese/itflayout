@@ -1,7 +1,7 @@
 <html>
     <head>
-      <meta charset="utf-8">
-      <title>ITF - List of SCs</title>
+        <meta charset="utf-8">
+        <title>ITF - List of SCs</title>
         <script type="text/javascript">
             function edit_row(id) {
                 var cur_ip=document.getElementById("ip"+id).innerHTML;
@@ -13,7 +13,7 @@
                 var cur_environment=document.getElementById("environment"+id).innerHTML;
                 var cur_priconc=document.getElementById("priconc"+id).innerHTML;
                 var cur_secconc=document.getElementById("secconc"+id).innerHTML;
-                var cur_devicesactive=document.getElementById("devicesactive"+id).innerHTML;
+                //var cur_devicesactive=document.getElementById("devicesactive"+id).innerHTML;
                 var cur_id = id.toString();
 
                 document.getElementById("ip"+id).innerHTML="<input type='text' id='ip_text"+id+"' name='new_ip"+id+"' value='"+cur_ip+"'>";
@@ -26,7 +26,7 @@
                 document.getElementById("environment"+id).innerHTML="<input type='text' id='environment_text"+id+"' name='new_environment"+id+"' value='"+cur_environment+"'>";
                 document.getElementById("priconc"+id).innerHTML="<input type='text' id='priconc_text"+id+"' name='new_priconc"+id+"' value='"+cur_priconc+"'>";
                 document.getElementById("secconc"+id).innerHTML="<input type='text' id='secconc_text"+id+"' name='new_secconc"+id+"' value='"+cur_secconc+"'>";
-                document.getElementById("devicesactive"+id).innerHTML="<input type='text' id='devicesactive_text"+id+"' name='new_devicesactive"+id+"' value='"+cur_devicesactive+"'>";
+                //document.getElementById("devicesactive"+id).innerHTML="<input type='text' id='devicesactive_text"+id+"' name='new_devicesactive"+id+"' value='"+cur_devicesactive+"'>";
 
                 document.getElementById("edit_button0").style.display="none";
                 {{range .}}
@@ -36,6 +36,7 @@
             }
 
             function save_row(id) {
+                /*
                 var new_ip=document.getElementById("ip"+id).value;
                 var new_location=document.getElementById("location"+id).value;
                 var new_version=document.getElementById("version"+id).value;
@@ -46,13 +47,13 @@
                 var new_priconc=document.getElementById("priconc"+id).value;
                 var new_secconc=document.getElementById("secconc"+id).value;
                 var new_devicesactive=document.getElementById("devicesactive"+id).value;
-                
+                */
 
                 document.getElementById("formtable").submit();
             }            
         </script>
-      <style>
-        h1 {
+        <style>
+        h1, h2 {
             font-family: arial, sans-serif;
         }
     
@@ -69,7 +70,7 @@
         }
         
         tr:nth-child(even) {
-            background-color: #dadada;
+            background-color: #fafafa;
         }
         </style>
     </head>
@@ -77,7 +78,7 @@
         <h1>List of SCs</h1>
         <ul>
             <li><a href="./devices">List of FLRs and Gates</a></li>
-            <li><a href="./devices">List of Bus Rigs</a></li>
+            <li><a href="./busrigs">List of Bus Rigs</a></li>
         </ul>
         <form id="formtable" action="" method="post"><table>
             <tr>

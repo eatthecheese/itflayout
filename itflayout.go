@@ -13,6 +13,9 @@ import (
 )
 
 const NUMSCFIELDS = 10
+const NewRLG = 100
+const NewE2G = 101
+const NewFLR = 102
 
 type Sc struct {
 	Scid          int
@@ -58,9 +61,58 @@ func handleIndex(w http.ResponseWriter, req *http.Request) {
 
 func handleListOfAllDevices(w http.ResponseWriter, req *http.Request) {
 	db, err := testlabConnectDb()
+
+	// Work in Progress below
+	if req.Method == "POST" {
+		if err := req.ParseForm(); err != nil {
+			log.Println(err)
+		}
+		updateDevice := Device{}
+		updateDeviceSc := Sc{}
+		updateDevice.ParentSc = &updateDeviceSc
+		newInputs := req.PostForm
+		updateDeviceid := newInputs.Get("id") // Get the Device ID to be updated
+		updateDeviceidInt, _ := strconv.Atoi(updateDeviceid)
+		// Push the updated Device values
+		updateDevice.Ip = newInputs.Get("new_ip" + updateDeviceid)
+		updateDevice.ParentSc.Ip = newInputs.Get("new_scip" + updateDeviceid)
+		updateDevice.VersionDevice = newInputs.Get("new_versiondevice" + updateDeviceid)
+		updateDevice.VersionRtd = newInputs.Get("new_versionrtd" + updateDeviceid)
+		updateDevice.Plinth, _ = strconv.Atoi(newInputs.Get("new_plinth" + updateDeviceid))
+
+		if newInputs.Get("devicetype") == "rlg" {
+			updateDevice.IsRLG = true
+			updateDevice.VersionEprom = newInputs.Get("new_versioneprom" + updateDeviceid)
+			updateDevice.DoppPort = newInputs.Get("new_doppport" + updateDeviceid)
+			updateDevice.DoppIp = newInputs.Get("new_doppip" + updateDeviceid)
+		} else if newInputs.Get("devicetype") == "flr" {
+			updateDevice.IsFLR = true
+			updateDevice.DoppPort = newInputs.Get("new_doppport" + updateDeviceid)
+			updateDevice.DoppIp = newInputs.Get("new_doppip" + updateDeviceid)
+		} else if newInputs.Get("devicetype") == "e2gate" { // is E2 gate
+			updateDevice.IsE2Gate = true
+		}
+
+		if updateDeviceidInt != NewRLG && updateDeviceidInt != NewE2G && updateDeviceidInt != NewFLR {
+			if updateDevice.IsE2Gate == true {
+				updateIntoDevicesE2G(db, updateDeviceidInt, updateDevice.Ip, updateDevice.ParentSc.Ip, updateDevice.VersionDevice, updateDevice.VersionRtd, updateDevice.Plinth)
+			} else if updateDevice.IsFLR == true {
+				updateIntoDevicesFLR(db, updateDeviceidInt, updateDevice.Ip, updateDevice.ParentSc.Ip, updateDevice.VersionDevice, updateDevice.VersionRtd, updateDevice.Plinth, updateDevice.DoppPort, updateDevice.DoppIp)
+			} else if updateDevice.IsRLG == true {
+				updateIntoDevicesRLG(db, updateDeviceidInt, updateDevice.Ip, updateDevice.ParentSc.Ip, updateDevice.VersionDevice, updateDevice.VersionRtd, updateDevice.Plinth, updateDevice.VersionEprom, updateDevice.DoppPort, updateDevice.DoppIp)
+			}
+		} else if updateDeviceidInt == NewRLG {
+			insertIntoDevicesRLG(db, updateDevice.Ip, updateDevice.ParentSc.Ip, updateDevice.VersionDevice, updateDevice.VersionRtd, updateDevice.Plinth, updateDevice.VersionEprom, updateDevice.DoppPort, updateDevice.DoppIp, "RLG MSTRP2")
+		} else if updateDeviceidInt == NewE2G {
+			insertIntoDevicesE2G(db, updateDevice.Ip, updateDevice.ParentSc.Ip, updateDevice.VersionDevice, updateDevice.VersionRtd, updateDevice.Plinth, "E2 Gate")
+		} else if updateDeviceidInt == NewFLR {
+			insertIntoDevicesFLR(db, updateDevice.Ip, updateDevice.ParentSc.Ip, updateDevice.VersionDevice, updateDevice.VersionRtd, updateDevice.Plinth, updateDevice.DoppPort, updateDevice.DoppIp, "FLR")
+		}
+	}
+
 	r, err := db.Query(`SELECT d.deviceid, d.ip, d.version, d.version_rtd, d.devicetype, d.doppip, d.doppport, d.plinth, d.scip, d.version_eprom, 
 						s.location, s.nlc, s.environment, s.transportmode from list_of_devices d, list_of_scs s 
-						where d.scip = s.ip;`)
+						where d.scip = s.ip order by d.ip asc;`)
 	checkErr(err)
 	defer r.Close()
 
@@ -91,15 +143,22 @@ func handleListOfAllSCs(w http.ResponseWriter, req *http.Request) {
 		updateSc.Environment = newInputs.Get("new_environment" + updateScid)
 		updateSc.Priconc = newInputs.Get("new_priconc" + updateScid)
 		updateSc.Secconc = newInputs.Get("new_secconc" + updateScid)
-		updateSc.Devicesactive, _ = strconv.Atoi(newInputs.Get("new_devicesactive" + updateScid))
+		//updateSc.Devicesactive, _ = strconv.Atoi(newInputs.Get("new_devicesactive" + updateScid))
 
 		if updateScidInt != 0 {
-			updateIntoScs(db, updateScidInt, updateSc.Ip, updateSc.Location, updateSc.Version, updateSc.Nlc, updateSc.Scnumber, updateSc.Transportmode, updateSc.Environment, updateSc.Priconc, updateSc.Secconc, updateSc.Devicesactive)
+			updateIntoScs(db, updateScidInt, updateSc.Ip, updateSc.Location, updateSc.Version, updateSc.Nlc, updateSc.Scnumber, updateSc.Transportmode, updateSc.Environment, updateSc.Priconc, updateSc.Secconc)
 		} else {
-			insertIntoScs(db, updateSc.Ip, updateSc.Location, updateSc.Version, updateSc.Nlc, updateSc.Scnumber, updateSc.Transportmode, updateSc.Environment, updateSc.Priconc, updateSc.Secconc, updateSc.Devicesactive)
+			insertIntoScs(db, updateSc.Ip, updateSc.Location, updateSc.Version, updateSc.Nlc, updateSc.Scnumber, updateSc.Transportmode, updateSc.Environment, updateSc.Priconc, updateSc.Secconc)
 		}
 	}
-	r, err := db.Query("SELECT * FROM list_of_scs m;")
+	r, err := db.Query(`select s.*, d.devices
+		from list_of_scs s
+		left join
+		(select list_of_scs.ip, count(list_of_devices.scip) as devices
+		from list_of_scs
+		left join list_of_devices on list_of_scs.ip = list_of_devices.scip
+		group by list_of_scs.ip) d on s.ip = d.ip
+		order by s.ip asc;`)
 	checkErr(err)
 	defer r.Close()
 	var listOfScs ScList = ScList{}
@@ -107,6 +166,12 @@ func handleListOfAllSCs(w http.ResponseWriter, req *http.Request) {
 
 	t, _ := template.ParseFiles("static/templates/table.html")
 	t.Execute(w, listOfScs)
+}
+
+func handleListOfAllBusRigs(w http.ResponseWriter, req *http.Request) {
+	t, _ := template.ParseFiles("static/templates/listofbusrigs.html")
+	t.Execute(w, t)
+
 }
 
 // Connect to the testlab database
@@ -137,22 +202,84 @@ func checkErr(err error) {
 	}
 }
 
-func insertIntoScs(db *sql.DB, Ip string, Location string, Version string, Nlc int, Scnumber int, Transportmode string, Environment string, Priconc string, Secconc string, Devicesactive int) {
+func insertIntoScs(db *sql.DB, Ip string, Location string, Version string, Nlc int, Scnumber int, Transportmode string, Environment string, Priconc string, Secconc string) {
 	// prepare to insert some entries into list_of_scs
-	stmt, err := db.Prepare("insert into list_of_scs (Ip, Location, Version, Nlc, Scnumber, Transportmode, Environment, Priconc, Secconc, Devicesactive) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	stmt, err := db.Prepare("insert into list_of_scs (Ip, Location, Version, Nlc, Scnumber, Transportmode, Environment, Priconc, Secconc) values (?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	checkErr(err)
-	result, err := stmt.Exec(Ip, Location, Version, Nlc, Scnumber, Transportmode, Environment, Priconc, Secconc, Devicesactive)
+	result, err := stmt.Exec(Ip, Location, Version, Nlc, Scnumber, Transportmode, Environment, Priconc, Secconc)
 	checkErr(err)
 	resRows, _ := result.RowsAffected()
 	fmt.Println(resRows, "rows affected")
 }
 
 // Update records in the db - WIP, require data checking conditions
-func updateIntoScs(db *sql.DB, Scid int, Ip string, Location string, Version string, Nlc int, Scnumber int, Transportmode string, Environment string, Priconc string, Secconc string, Devicesactive int) {
+func updateIntoScs(db *sql.DB, Scid int, Ip string, Location string, Version string, Nlc int, Scnumber int, Transportmode string, Environment string, Priconc string, Secconc string) {
 	// prepare to update some entries into list_of_scs
-	stmt, err := db.Prepare("update list_of_scs set Ip=?, Location=?, Version=?, Nlc=?, Scnumber=?, Transportmode=?, Environment=?, Priconc=?, Secconc=?, Devicesactive=? where Scid=?")
+	stmt, err := db.Prepare("update list_of_scs set Ip=?, Location=?, Version=?, Nlc=?, Scnumber=?, Transportmode=?, Environment=?, Priconc=?, Secconc=? where Scid=?")
 	checkErr(err)
-	result, err := stmt.Exec(Ip, Location, Version, Nlc, Scnumber, Transportmode, Environment, Priconc, Secconc, Devicesactive, Scid)
+	result, err := stmt.Exec(Ip, Location, Version, Nlc, Scnumber, Transportmode, Environment, Priconc, Secconc, Scid)
+	checkErr(err)
+	resRows, _ := result.RowsAffected()
+	fmt.Println(resRows, "rows affected")
+}
+
+func insertIntoDevicesRLG(db *sql.DB, Ip string, Scip string, VersionDevice string, VersionRtd string, Plinth int, VersionEprom string, DoppPort string, DoppIp string, Devicetype string) {
+	// prepare to insert some device into list_of_devices
+	stmt, err := db.Prepare("insert into list_of_devices (Ip, Scip, Version, Version_rtd, Plinth, Version_eprom, Doppport, Doppip, Devicetype) values (?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	checkErr(err)
+	result, err := stmt.Exec(Ip, Scip, VersionDevice, VersionRtd, Plinth, VersionEprom, DoppPort, DoppIp, Devicetype)
+	checkErr(err)
+	resRows, _ := result.RowsAffected()
+	fmt.Println(resRows, "rows affected")
+}
+
+func insertIntoDevicesE2G(db *sql.DB, Ip string, Scip string, VersionDevice string, VersionRtd string, Plinth int, Devicetype string) {
+	// prepare to insert some device into list_of_devices
+	stmt, err := db.Prepare("insert into list_of_devices (Ip, Scip, Version, Version_rtd, Plinth, Devicetype) values (?, ?, ?, ?, ?, ?)")
+	checkErr(err)
+	result, err := stmt.Exec(Ip, Scip, VersionDevice, VersionRtd, Plinth, Devicetype)
+	checkErr(err)
+	resRows, _ := result.RowsAffected()
+	fmt.Println(resRows, "rows affected")
+}
+
+func insertIntoDevicesFLR(db *sql.DB, Ip string, Scip string, VersionDevice string, VersionRtd string, Plinth int, DoppPort string, DoppIp string, Devicetype string) {
+	// prepare to insert some device into list_of_devices
+	stmt, err := db.Prepare("insert into list_of_devices (Ip, Scip, Version, Version_rtd, Plinth, Doppport, Doppip, Devicetype) values (?, ?, ?, ?, ?, ?, ?, ?)")
+	checkErr(err)
+	result, err := stmt.Exec(Ip, Scip, VersionDevice, VersionRtd, Plinth, DoppPort, DoppIp, Devicetype)
+	checkErr(err)
+	resRows, _ := result.RowsAffected()
+	fmt.Println(resRows, "rows affected")
+}
+
+// Update Device DB - WIP, require data checking conditions
+// E2 Gate function
+func updateIntoDevicesE2G(db *sql.DB, Deviceid int, Ip string, Scip string, VersionDevice string, VersionRtd string, Plinth int) {
+	// prepare to update some entries into list_of_scs
+	stmt, err := db.Prepare("update list_of_devices set Ip=?, Version=?, Version_rtd=?, Plinth=?, Scip=? where Deviceid=?")
+	checkErr(err)
+	result, err := stmt.Exec(Ip, VersionDevice, VersionRtd, Plinth, Scip, Deviceid)
+	checkErr(err)
+	resRows, _ := result.RowsAffected()
+	fmt.Println(resRows, "rows affected")
+}
+
+func updateIntoDevicesRLG(db *sql.DB, Deviceid int, Ip string, Scip string, VersionDevice string, VersionRtd string, Plinth int, VersionEprom string, DoppPort string, DoppIp string) {
+	// prepare to update some entries into list_of_scs
+	stmt, err := db.Prepare("update list_of_devices set Ip=?, Version=?, Version_rtd=?, Plinth=?, Scip=?, Version_eprom=?, Doppip=?, Doppport=?  where Deviceid=?")
+	checkErr(err)
+	result, err := stmt.Exec(Ip, VersionDevice, VersionRtd, Plinth, Scip, VersionEprom, DoppIp, DoppPort, Deviceid)
+	checkErr(err)
+	resRows, _ := result.RowsAffected()
+	fmt.Println(resRows, "rows affected")
+}
+
+func updateIntoDevicesFLR(db *sql.DB, Deviceid int, Ip string, Scip string, VersionDevice string, VersionRtd string, Plinth int, DoppPort string, DoppIp string) {
+	// prepare to update some entries into list_of_scs
+	stmt, err := db.Prepare("update list_of_devices set Ip=?, Version=?, Version_rtd=?, Plinth=?, Scip=?, Doppip=?, Doppport=? where Deviceid=?")
+	checkErr(err)
+	result, err := stmt.Exec(Ip, VersionDevice, VersionRtd, Plinth, Scip, DoppIp, DoppPort, Deviceid)
 	checkErr(err)
 	resRows, _ := result.RowsAffected()
 	fmt.Println(resRows, "rows affected")
@@ -201,5 +328,6 @@ func main() {
 	http.HandleFunc("/", handleIndex)
 	http.HandleFunc("/itf/", handleListOfAllSCs)
 	http.HandleFunc("/itf/devices", handleListOfAllDevices)
+	http.HandleFunc("/itf/busrigs", handleListOfAllBusRigs)
 	http.ListenAndServe(":8080", nil)
 }

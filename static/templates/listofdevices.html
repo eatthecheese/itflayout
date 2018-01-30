@@ -1,8 +1,77 @@
 <html>
     <head>
         <title>ITF - List of Gates and FLRs</title>
+        <script type="text/javascript">
+            function edit_row(id) {
+                var cur_ip = document.getElementById("ip"+id).innerHTML;
+                var cur_scip = document.getElementById("scip"+id).innerHTML;
+                var cur_versiondevice = document.getElementById("versiondevice"+id).innerHTML;
+                var cur_versionrtd = document.getElementById("versionrtd"+id).innerHTML;
+                var cur_plinth = document.getElementById("plinth"+id).innerHTML;
+                var cur_id = id.toString();
+
+                document.getElementById("ip"+id).innerHTML="<input type='text' id='ip_text"+id+"' name='new_ip"+id+"' value='"+cur_ip+"'>";
+                document.getElementById("formdummy").innerHTML="<input type='hidden' name='id' value='"+cur_id+"'>";
+                document.getElementById("scip"+id).innerHTML="<input type='text' id='scip_text"+id+"' name='new_scip"+id+"' value='"+cur_scip+"'>";
+                document.getElementById("versiondevice"+id).innerHTML="<input type='text' id='versiondevice_text"+id+"' name='new_versiondevice"+id+"' value='"+cur_versiondevice+"'>";
+                document.getElementById("versionrtd"+id).innerHTML="<input type='text' id='versionrtd_text"+id+"' name='new_versionrtd"+id+"' value='"+cur_versionrtd+"'>";
+                document.getElementById("plinth"+id).innerHTML="<input type='text' id='plinth_text"+id+"' name='new_plinth"+id+"' value='"+cur_plinth+"'>";
+                document.getElementById("formdummy2").innerHTML="<input type='hidden' name='devicetype' value='e2gate'>";
+                {{range .}}
+                    if (id == "{{.Deviceid}}") {
+                        {{if .IsRLG}}
+                            document.getElementById("formdummy2").innerHTML="<input type='hidden' name='devicetype' value='rlg'>";
+                            var cur_versioneprom = document.getElementById("versioneprom"+id).innerHTML;
+                            document.getElementById("versioneprom"+id).innerHTML="<input type='text' id='versioneprom_text"+id+"' name='new_versioneprom"+id+"' value='"+cur_versioneprom+"'>";
+                            var cur_doppport = document.getElementById("doppport"+id).innerHTML;
+                            var cur_doppip = document.getElementById("doppip"+id).innerHTML;
+                            document.getElementById("doppport"+id).innerHTML="<input type='text' id='doppport_text"+id+"' name='new_doppport"+id+"' value='"+cur_doppport+"'>";
+                            document.getElementById("doppip"+id).innerHTML="<input type='text' id='doppip_text"+id+"' name='new_doppip"+id+"' value='"+cur_doppip+"'>";
+                        {{end}}
+                        {{if .IsFLR}}
+                            document.getElementById("formdummy2").innerHTML="<input type='hidden' name='devicetype' value='flr'>";
+                            var cur_doppport = document.getElementById("doppport"+id).innerHTML;
+                            var cur_doppip = document.getElementById("doppip"+id).innerHTML;
+                            document.getElementById("doppport"+id).innerHTML="<input type='text' id='doppport_text"+id+"' name='new_doppport"+id+"' value='"+cur_doppport+"'>";
+                            document.getElementById("doppip"+id).innerHTML="<input type='text' id='doppip_text"+id+"' name='new_doppip"+id+"' value='"+cur_doppip+"'>";
+                        {{end}}
+                    }
+                {{end}}
+                if (id == "100") {
+                    document.getElementById("formdummy2").innerHTML="<input type='hidden' name='devicetype' value='rlg'>";
+                    var cur_versioneprom = document.getElementById("versioneprom"+id).innerHTML;
+                    document.getElementById("versioneprom"+id).innerHTML="<input type='text' id='versioneprom_text"+id+"' name='new_versioneprom"+id+"' value='"+cur_versioneprom+"'>";
+                    var cur_doppport = document.getElementById("doppport"+id).innerHTML;
+                    var cur_doppip = document.getElementById("doppip"+id).innerHTML;
+                    document.getElementById("doppport"+id).innerHTML="<input type='text' id='doppport_text"+id+"' name='new_doppport"+id+"' value='"+cur_doppport+"'>";
+                    document.getElementById("doppip"+id).innerHTML="<input type='text' id='doppip_text"+id+"' name='new_doppip"+id+"' value='"+cur_doppip+"'>";
+                } else if (id == "102") {
+                    document.getElementById("formdummy2").innerHTML="<input type='hidden' name='devicetype' value='flr'>";
+                    var cur_doppport = document.getElementById("doppport"+id).innerHTML;
+                    var cur_doppip = document.getElementById("doppip"+id).innerHTML;
+                    document.getElementById("doppport"+id).innerHTML="<input type='text' id='doppport_text"+id+"' name='new_doppport"+id+"' value='"+cur_doppport+"'>";
+                    document.getElementById("doppip"+id).innerHTML="<input type='text' id='doppip_text"+id+"' name='new_doppip"+id+"' value='"+cur_doppip+"'>";
+                }  else if (id == "101") {
+                    document.getElementById("formdummy2").innerHTML="<input type='hidden' name='devicetype' value='e2gate'>";
+                }
+
+                document.getElementById("edit_button100").style.display="none";
+                document.getElementById("edit_button101").style.display="none";
+                document.getElementById("edit_button102").style.display="none";
+                {{range .}}
+                    document.getElementById("edit_button"+{{.Deviceid}}).style.display="none";
+                {{end}}
+                document.getElementById("save_button"+id).style.display="block";
+            }
+
+            function save_row(id) {
+
+                document.getElementById("formtable").submit();     
+
+            }
+        </script>
         <style>
-            h1 {
+            h1, h2 {
                 font-family: arial, sans-serif;
             }
         
@@ -19,7 +88,7 @@
             }
             
             tr:nth-child(even) {
-                background-color: #dadada;
+                background-color: #fafafa;
             }
         </style>
     </head>
@@ -27,9 +96,10 @@
         <h1>List of FLRs and Gates</h1>
         <ul>
             <li><a href="/itf/">List of SCs</a></li>
-            <li><a href="/itf/">List of Bus Rigs</a></li>
+            <li><a href="/itf/busrigs">List of Bus Rigs</a></li>
         </ul> 
         <h2>Legacy Gates</h2>
+        <form id="formtable" action="" method="post">
         <table>
             <tr>
                 <th>IP</th>
@@ -37,7 +107,8 @@
                 <th>Location</th>
                 <th>Environment</th>
                 <th>Transport Mode</th>
-                <th>Device (RTD) Version</th>
+                <th>Device Pkg Version</th>
+                <th>RTD Version</th>
                 <th>Plinth</th>
                 <th>EPROM</th>
                 <th>DOPP Port</th>
@@ -46,19 +117,42 @@
             {{range .}}
                 {{if .IsRLG}}
                 <tr>
-                    <td>{{.Ip}}</td>
-                    <td>{{.ParentSc.Ip}}</td>
-                    <td>{{.ParentSc.Location}}</td>
-                    <td>{{.ParentSc.Environment}}</td>
-                    <td>{{.ParentSc.Transportmode}}</td>
-                    <td>{{.VersionDevice}} ({{.VersionRtd}})</td>
-                    <td>{{.Plinth}}</td>
-                    <td>{{.VersionEprom}}</td>
-                    <td>{{.DoppPort}}</td>
-                    <td>{{.DoppIp}}</td>
+                    <td id="ip{{.Deviceid}}">{{.Ip}}</td>
+                    <td id="scip{{.Deviceid}}">{{.ParentSc.Ip}}</td>
+                    <td id="sclocation{{.Deviceid}}">{{.ParentSc.Location}}</td>
+                    <td id="scenvironment{{.Deviceid}}">{{.ParentSc.Environment}}</td>
+                    <td id="sctransportmode{{.Deviceid}}">{{.ParentSc.Transportmode}}</td>
+                    <td id="versiondevice{{.Deviceid}}">{{.VersionDevice}}</td>
+                    <td id="versionrtd{{.Deviceid}}">{{.VersionRtd}}</td>
+                    <td id="plinth{{.Deviceid}}">{{.Plinth}}</td>
+                    <td id="versioneprom{{.Deviceid}}">{{.VersionEprom}}</td>
+                    <td id="doppport{{.Deviceid}}">{{.DoppPort}}</td>
+                    <td id="doppip{{.Deviceid}}">{{.DoppIp}}</td>
+                    <td>
+                        <input type="button" id="edit_button{{.Deviceid}}" value="Edit" class="edit_button" onclick="edit_row('{{.Deviceid}}')">
+                        <input hidden type='button' id="save_button{{.Deviceid}}" value="Save" class="save_button" onclick="save_row('{{.Deviceid}}')">
+                    </td>
                 </tr>
                 {{end}}
             {{end}}
+            <!--100 is a magic number for new RLG -->
+            <tr>
+                <td id="ip100"></td>
+                <td id="scip100"></td>
+                <td id="sclocation100"></td>
+                <td id="scenvironment100"></td>
+                <td id="sctransportmode100"></td>
+                <td id="versiondevice100"></td>
+                <td id="versionrtd100"></td>
+                <td id="plinth100"></td>
+                <td id="versioneprom100"></td>
+                <td id="doppport100"></td>
+                <td id="doppip100"></td>
+                <td>
+                    <input type="button" id="edit_button100" value="Add" class="edit_button" onclick="edit_row('100')">
+                    <input hidden type='button' id="save_button100" value="Save" class="save_button" onclick="save_row('100')">
+                </td>
+            </tr>
         </table>
         <h2>E2 Gates</h2>
         <table>
@@ -68,22 +162,43 @@
                 <th>Location</th>
                 <th>Environment</th>
                 <th>Transport Mode</th>
-                <th>Device (RTD) Version</th>
+                <th>Device Pkg Version</th>
+                <th>RTD Version</th>
                 <th>Plinth</th>
             </tr>
             {{range .}}
                 {{if .IsE2Gate}}
                 <tr>
-                    <td>{{.Ip}}</td>
-                    <td>{{.ParentSc.Ip}}</td>
-                    <td>{{.ParentSc.Location}}</td>
-                    <td>{{.ParentSc.Environment}}</td>
-                    <td>{{.ParentSc.Transportmode}}</td>
-                    <td>{{.VersionDevice}} ({{.VersionRtd}})</td>
-                    <td>{{.Plinth}}</td>
+                    <td id="ip{{.Deviceid}}">{{.Ip}}</td>
+                    <td id="scip{{.Deviceid}}">{{.ParentSc.Ip}}</td>
+                    <td id="sclocation{{.Deviceid}}">{{.ParentSc.Location}}</td>
+                    <td id="scenvironment{{.Deviceid}}">{{.ParentSc.Environment}}</td>
+                    <td id="sctransportmode{{.Deviceid}}">{{.ParentSc.Transportmode}}</td>
+                    <td id="versiondevice{{.Deviceid}}">{{.VersionDevice}}</td>
+                    <td id="versionrtd{{.Deviceid}}">{{.VersionRtd}}</td>
+                    <td id="plinth{{.Deviceid}}">{{.Plinth}}</td>
+                    <td>
+                        <input type="button" id="edit_button{{.Deviceid}}" value="Edit" class="edit_button" onclick="edit_row('{{.Deviceid}}')">
+                        <input hidden type='button' id="save_button{{.Deviceid}}" value="Save" class="save_button" onclick="save_row('{{.Deviceid}}')">
+                    </td>
                 </tr>
                 {{end}}
             {{end}}
+            <!--101 is a magic number for new E2Gate -->
+            <tr>
+                <td id="ip101"></td>
+                <td id="scip101"></td>
+                <td id="sclocation101"></td>
+                <td id="scenvironment101"></td>
+                <td id="sctransportmode101"></td>
+                <td id="versiondevice101"></td>
+                <td id="versionrtd101"></td>
+                <td id="plinth101"></td>
+                <td>
+                    <input type="button" id="edit_button101" value="Add" class="edit_button" onclick="edit_row('101')">
+                    <input hidden type='button' id="save_button101" value="Save" class="save_button" onclick="save_row('101')">
+                </td>
+            </tr>
         </table>
         <h2>Fixed Location Readers</h2>
         <table>
@@ -93,7 +208,8 @@
                 <th>Location</th>
                 <th>Environment</th>
                 <th>Transport Mode</th>
-                <th>Device (RTD) Version</th>
+                <th>Device Pkg Version</th>
+                <th>RTD Version</th>
                 <th>Plinth</th>
                 <th>DOPP Port</th>
                 <th>DOPP IP</th>
@@ -101,18 +217,43 @@
             {{range .}}
                 {{if .IsFLR}}
                 <tr>
-                    <td>{{.Ip}}</td>
-                    <td>{{.ParentSc.Ip}}</td>
-                    <td>{{.ParentSc.Location}}</td>
-                    <td>{{.ParentSc.Environment}}</td>
-                    <td>{{.ParentSc.Transportmode}}</td>
-                    <td>{{.VersionDevice}} ({{.VersionRtd}})</td>
-                    <td>{{.Plinth}}</td>
-                    <td>{{.DoppPort}}</td>
-                    <td>{{.DoppIp}}</td>
+                    <td id="ip{{.Deviceid}}">{{.Ip}}</td>
+                    <td id="scip{{.Deviceid}}">{{.ParentSc.Ip}}</td>
+                    <td id="sclocation{{.Deviceid}}">{{.ParentSc.Location}}</td>
+                    <td id="scenvironment{{.Deviceid}}">{{.ParentSc.Environment}}</td>
+                    <td id="sctransportmode{{.Deviceid}}">{{.ParentSc.Transportmode}}</td>
+                    <td id="versiondevice{{.Deviceid}}">{{.VersionDevice}}</td>
+                    <td id="versionrtd{{.Deviceid}}">{{.VersionRtd}}</td>
+                    <td id="plinth{{.Deviceid}}">{{.Plinth}}</td>
+                    <td id="doppport{{.Deviceid}}">{{.DoppPort}}</td>
+                    <td id="doppip{{.Deviceid}}">{{.DoppIp}}</td>
+                    <td>
+                        <input type="button" id="edit_button{{.Deviceid}}" value="Edit" class="edit_button" onclick="edit_row('{{.Deviceid}}')">
+                        <input hidden type='button' id="save_button{{.Deviceid}}" value="Save" class="save_button" onclick="save_row('{{.Deviceid}}')">
+                    </td>
                 </tr>
                 {{end}}
             {{end}}
+            <!--102 is a magic number for new FLR -->
+            <tr>
+                <td id="ip102"></td>
+                <td id="scip102"></td>
+                <td id="sclocation102"></td>
+                <td id="scenvironment102"></td>
+                <td id="sctransportmode102"></td>
+                <td id="versiondevice102"></td>
+                <td id="versionrtd102"></td>
+                <td id="plinth102"></td>
+                <td id="doppport102"></td>
+                <td id="doppip102"></td>
+                <td>
+                    <input type="button" id="edit_button102" value="Add" class="edit_button" onclick="edit_row('102')">
+                    <input hidden type='button' id="save_button102" value="Save" class="save_button" onclick="save_row('102')">
+                </td>
+            </tr>
         </table>
+        <p id="formdummy"></p>
+        <p id="formdummy2"></p>
+        </form>
     </body>
 </html>
