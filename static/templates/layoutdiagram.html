@@ -1,0 +1,908 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>ITF - Visual Layout</title>
+        <script type="text/javascript">      
+        </script>
+        <style>
+        h1, h2, h5, p {
+            font-family: arial, sans-serif;
+        }
+
+        h4 {
+            font-family: arial, sans-serif;
+            text-align: center;
+        }
+
+        img {
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+
+        .card_flr {
+            /* Add shadows to create the "card" effect */
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            transition: 0.3s;
+            border-radius: 5px; /* 5px rounded corners */
+            margin-left: 20px;
+            width: 150px;
+            height: 300px;
+            display: inline-table;
+        }
+
+        /* On mouse-over, add a deeper shadow */
+        .card_flr:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
+
+        .card_rlg {
+            /* Add shadows to create the "card" effect */
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            transition: 0.3s;
+            border-radius: 5px; /* 5px rounded corners */
+            margin-left: 20px;
+            width: 150px;
+            height: 250px;
+            display: inline-table;
+        }
+
+        /* On mouse-over, add a deeper shadow */
+        .card_rlg:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
+
+        .card_e2g {
+            /* Add shadows to create the "card" effect */
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            transition: 0.3s;
+            border-radius: 5px; /* 5px rounded corners */
+            margin-left: 20px;
+            width: 150px;
+            height: 250px;
+            display: inline-table;
+        }
+
+        /* On mouse-over, add a deeper shadow */
+        .card_e2g:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
+
+        /* Add some padding inside the card container */
+        .container {
+            padding: 2px 12px;
+        }
+        </style>
+    </head>
+    <body>
+        <h1>ITF Visual Layout</h1>
+        <ul>
+            <li><a href="/itf/devices">List of FLRs and Gates</a></li>
+            <li><a href="/itf/">List of SCs</a></li>
+        </ul>
+        <h2>FLRs</h2>
+        <div class="card_flr">
+            <h4>192.168.181.87</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.87"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.86</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.86"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.85</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.85"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}}
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.84</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.84"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.83</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.83"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.82</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.82"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.81</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.81"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.80</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.80"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.88</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.88"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.89</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.89"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.90</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.90"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.91</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.91"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.92</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.92"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <br style="clear: both;"> 
+        <div class="card_flr">
+            <h4>192.168.181.93</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.93"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.94</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.94"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.95</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.95"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.96</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.96"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.97</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.97"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.98</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.98"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.99</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.99"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.100</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.100"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.101</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.101"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_flr">
+            <h4>192.168.181.102</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.102"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <h2>Legacy Gates</h2>
+        <div class="card_rlg">
+            <h4>192.168.181.66</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.66"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_rlg">
+            <h4>192.168.181.67</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.67"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <br style="clear: both;"> 
+        <div class="card_rlg">
+            <h4>192.168.181.60</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.60"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_rlg">
+            <h4>192.168.181.61</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.61"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_rlg">
+            <h4>192.168.181.62</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.62"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <br style="clear: both;"> 
+        <div class="card_rlg">
+            <h4>192.168.181.63</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.63"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_rlg">
+            <h4>192.168.181.64</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.64"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_rlg">
+            <h4>192.168.181.65</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.65"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}<br>
+                        {{.DoppIp}}<br>
+                        {{.DoppPort}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <h2>E2 Gates</h2>
+        <div class="card_e2g">
+            <h4>192.168.181.74</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.74"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_e2g">
+            <h4>192.168.181.73</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.73"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_e2g">
+            <h4>192.168.181.72</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.72"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_e2g">
+            <h4>192.168.181.71</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.71"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+        <div class="card_e2g">
+            <h4>192.168.181.70</h4>
+            {{range .}}
+                {{if eq .Ip "192.168.181.70"}}
+                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Rail"}}
+                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                    {{end}}
+                    <div class="container">
+                        <h4>{{.ParentSc.Location}}</h4>
+                        <h5>{{.ParentSc.Environment}}</h5>
+                        <p>
+                        {{.ParentSc.Ip}}
+                        </p>
+                    </div>
+                {{end}}
+            {{end}} 
+        </div>
+    </body>
+</html>

@@ -1,5 +1,29 @@
 package main
 
+/*
+Todo ----------------------------
+List of bus rigs page
+List of DOPPs page, should be similar to List Of SCs page
+Clean up unused .html and related go code
+Show MM6 BVs (Newcastle)
+Show CLD
+Clean up top menu buttons into a ribbon of options
+**Fix bug for when Device has unknown SC, disappears from List of Devices view**
+Add warnings for if invalid details are entered in List of SCs page
+*Add filters for Cubic Only, ETS Only, All Devices, etc. for List of Devices/List of SCs page*
+*Add filters for the Visual Layout page*
+Aesthetic improvements to the table views
+Fix clipping issue on visual layout page
+Aesthetic improvements to the visual layout page
+Add clickable options for the visual layout page
+Add Collaborative Test Team-facing view for List of devices
+Separate javascript from html files
+Add integration with change requests
+Add integration with Device Versions in the ITF
+**Add Cancel button for when Edit button is pressed accidentally in List of SCs/Devices pages**
+
+*/
+
 import (
 	"database/sql"
 	"fmt"
@@ -174,6 +198,22 @@ func handleListOfAllBusRigs(w http.ResponseWriter, req *http.Request) {
 
 }
 
+func handleLayout(w http.ResponseWriter, req *http.Request) {
+	db, err := testlabConnectDb()
+
+	r, err := db.Query(`SELECT d.deviceid, d.ip, d.version, d.version_rtd, d.devicetype, d.doppip, d.doppport, d.plinth, d.scip, d.version_eprom, 
+		s.location, s.nlc, s.environment, s.transportmode from list_of_devices d, list_of_scs s 
+		where d.scip = s.ip order by d.ip asc;`)
+	checkErr(err)
+	defer r.Close()
+
+	var listOfDevices DeviceList = DeviceList{}
+	listOfDevices, _ = getListOfDevices(r, listOfDevices)
+
+	t, _ := template.ParseFiles("static/templates/layoutdiagram.html")
+	t.Execute(w, listOfDevices)
+}
+
 // Connect to the testlab database
 func testlabConnectDb() (*sql.DB, error) {
 	userDb := "morty"
@@ -325,9 +365,12 @@ func main() {
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	http.HandleFunc("/", handleIndex)
+	//http.Handle("/static/assets/", http.StripPrefix("static/assets/", http.FileServer(http.Dir("assets"))))
+
+	//http.HandleFunc("/", handleIndex)
 	http.HandleFunc("/itf/", handleListOfAllSCs)
 	http.HandleFunc("/itf/devices", handleListOfAllDevices)
+	http.HandleFunc("/itf/layout", handleLayout)
 	http.HandleFunc("/itf/busrigs", handleListOfAllBusRigs)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8000", nil)
 }
