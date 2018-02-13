@@ -24,14 +24,40 @@
         tr:nth-child(even) {
             background-color: #fafafa;
         }
+
+        .topnav {
+            background-color:rgb(65,105,225);
+            overflow: hidden;
+        }
+
+        .topnav a {
+            float: left;
+            color: white;
+            text-align: center;
+            font-family: 'Trebuchet MS';
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .topnav a:hover {
+            background-color: rgb(177, 188, 221);
+            color: white;
+        }
+
+        .topnav a.topactive {
+            background-color: rgb(0, 35, 102);
+        }
         </style>
     </head>
     <body>
+        <div class="topnav">
+            <a href="/itf/layout">Visual Layout</a>
+            <a href="/itf/">List SCs</a>
+            <a href="/itf/devices">List Gates/FLRs</a>
+            <a class="topactive" href="/itf/busrigs">List BVs</a>
+        </div>
         <h1>List of Bus Rigs</h1>
-        <ul>
-            <li><a href="/itf/devices">List of FLRs and Gates</a></li>
-            <li><a href="/itf/">List of SCs</a></li>
-        </ul>
         <form id="formtable" action="" method="post"><table>
             <tr>
                 <th>Rig ID</th>

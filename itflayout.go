@@ -11,7 +11,6 @@ Clean up top menu buttons into a ribbon of options
 **Fix bug for when Device has unknown SC, disappears from List of Devices view**
 Add warnings for if invalid details are entered in List of SCs page
 *Add filters for Cubic Only, ETS Only, All Devices, etc. for List of Devices/List of SCs page*
-*Add filters for the Visual Layout page*
 Aesthetic improvements to the table views
 Fix clipping issue on visual layout page
 Aesthetic improvements to the visual layout page
@@ -42,6 +41,7 @@ const NewE2G = 101
 const NewFLR = 102
 
 type Sc struct {
+	Scname        string
 	Scid          int
 	Ip            string
 	Location      string
@@ -53,10 +53,14 @@ type Sc struct {
 	Priconc       string
 	Secconc       string
 	Devicesactive int
+	Changeby      string
+	Changetime    string
+	Comment       string
 	//list      []MortyList
 }
 type Device struct {
 	ParentSc      *Sc
+	Devicename    string
 	Deviceid      int
 	Ip            string
 	VersionDevice string
@@ -69,6 +73,9 @@ type Device struct {
 	IsFLR         bool
 	IsE2Gate      bool
 	IsRLG         bool
+	Changeby      string
+	Changetime    string
+	Comment       string
 }
 
 type ScList []Sc
@@ -95,48 +102,55 @@ func handleListOfAllDevices(w http.ResponseWriter, req *http.Request) {
 		updateDeviceSc := Sc{}
 		updateDevice.ParentSc = &updateDeviceSc
 		newInputs := req.PostForm
-		updateDeviceid := newInputs.Get("id") // Get the Device ID to be updated
-		updateDeviceidInt, _ := strconv.Atoi(updateDeviceid)
+		updateDevice.Devicename = newInputs.Get("id") // Get the Device ID to be updated
+		//updateDeviceidInt, _ := strconv.Atoi(updateDeviceid)
 		// Push the updated Device values
-		updateDevice.Ip = newInputs.Get("new_ip" + updateDeviceid)
-		updateDevice.ParentSc.Ip = newInputs.Get("new_scip" + updateDeviceid)
-		updateDevice.VersionDevice = newInputs.Get("new_versiondevice" + updateDeviceid)
-		updateDevice.VersionRtd = newInputs.Get("new_versionrtd" + updateDeviceid)
-		updateDevice.Plinth, _ = strconv.Atoi(newInputs.Get("new_plinth" + updateDeviceid))
+		updateDevice.Ip = newInputs.Get("new_ip")
+		updateDevice.ParentSc.Ip = newInputs.Get("new_scip")
+		updateDevice.VersionDevice = newInputs.Get("new_versiondevice")
+		updateDevice.VersionRtd = newInputs.Get("new_versionrtd")
+		updateDevice.Plinth, _ = strconv.Atoi(newInputs.Get("new_plinth"))
+		updateDevice.Changeby = newInputs.Get("new_changeby")
+		updateDevice.Comment = newInputs.Get("new_comment")
+		updateDevice.VersionEprom = newInputs.Get("new_versioneprom")
+		updateDevice.DoppPort = newInputs.Get("new_doppport")
+		updateDevice.DoppIp = newInputs.Get("new_doppip")
 
 		if newInputs.Get("devicetype") == "rlg" {
 			updateDevice.IsRLG = true
-			updateDevice.VersionEprom = newInputs.Get("new_versioneprom" + updateDeviceid)
-			updateDevice.DoppPort = newInputs.Get("new_doppport" + updateDeviceid)
-			updateDevice.DoppIp = newInputs.Get("new_doppip" + updateDeviceid)
+			updateDevice.DeviceType = "RLG MSTRP2"
+			/*updateDevice.VersionEprom = newInputs.Get("new_versioneprom")
+			updateDevice.DoppPort = newInputs.Get("new_doppport")
+			updateDevice.DoppIp = newInputs.Get("new_doppip")*/
 		} else if newInputs.Get("devicetype") == "flr" {
 			updateDevice.IsFLR = true
-			updateDevice.DoppPort = newInputs.Get("new_doppport" + updateDeviceid)
-			updateDevice.DoppIp = newInputs.Get("new_doppip" + updateDeviceid)
+			updateDevice.DeviceType = "FLR"
+			/*updateDevice.DoppPort = newInputs.Get("new_doppport")
+			updateDevice.DoppIp = newInputs.Get("new_doppip")*/
 		} else if newInputs.Get("devicetype") == "e2gate" { // is E2 gate
 			updateDevice.IsE2Gate = true
+			updateDevice.DeviceType = "E2 Gate"
 		}
 
-		if updateDeviceidInt != NewRLG && updateDeviceidInt != NewE2G && updateDeviceidInt != NewFLR {
-			if updateDevice.IsE2Gate == true {
-				updateIntoDevicesE2G(db, updateDeviceidInt, updateDevice.Ip, updateDevice.ParentSc.Ip, updateDevice.VersionDevice, updateDevice.VersionRtd, updateDevice.Plinth)
-			} else if updateDevice.IsFLR == true {
-				updateIntoDevicesFLR(db, updateDeviceidInt, updateDevice.Ip, updateDevice.ParentSc.Ip, updateDevice.VersionDevice, updateDevice.VersionRtd, updateDevice.Plinth, updateDevice.DoppPort, updateDevice.DoppIp)
-			} else if updateDevice.IsRLG == true {
-				updateIntoDevicesRLG(db, updateDeviceidInt, updateDevice.Ip, updateDevice.ParentSc.Ip, updateDevice.VersionDevice, updateDevice.VersionRtd, updateDevice.Plinth, updateDevice.VersionEprom, updateDevice.DoppPort, updateDevice.DoppIp)
-			}
-		} else if updateDeviceidInt == NewRLG {
-			insertIntoDevicesRLG(db, updateDevice.Ip, updateDevice.ParentSc.Ip, updateDevice.VersionDevice, updateDevice.VersionRtd, updateDevice.Plinth, updateDevice.VersionEprom, updateDevice.DoppPort, updateDevice.DoppIp, "RLG MSTRP2")
-		} else if updateDeviceidInt == NewE2G {
-			insertIntoDevicesE2G(db, updateDevice.Ip, updateDevice.ParentSc.Ip, updateDevice.VersionDevice, updateDevice.VersionRtd, updateDevice.Plinth, "E2 Gate")
-		} else if updateDeviceidInt == NewFLR {
-			insertIntoDevicesFLR(db, updateDevice.Ip, updateDevice.ParentSc.Ip, updateDevice.VersionDevice, updateDevice.VersionRtd, updateDevice.Plinth, updateDevice.DoppPort, updateDevice.DoppIp, "FLR")
-		}
+		updateIntoDevices(db, updateDevice.Devicename, updateDevice.Ip, updateDevice.VersionDevice, updateDevice.VersionRtd, updateDevice.DeviceType, updateDevice.DoppIp,
+			updateDevice.DoppPort, updateDevice.Plinth, updateDevice.ParentSc.Ip, updateDevice.VersionEprom, updateDevice.Changeby)
+		updateIntoDevicesComments(db, updateDevice.Comment)
 	}
 
-	r, err := db.Query(`SELECT d.deviceid, d.ip, d.version, d.version_rtd, d.devicetype, d.doppip, d.doppport, d.plinth, d.scip, d.version_eprom, 
-						s.location, s.nlc, s.environment, s.transportmode from list_of_devices d, list_of_scs s 
-						where d.scip = s.ip order by d.ip asc;`)
+	r, err := db.Query(`SELECT d.devicename, d.deviceid, d.ip, d.version, d.version_rtd, d.devicetype, d.doppip, d.doppport, d.plinth, d.scip, d.version_eprom,
+		s.location, s.nlc, s.environment, s.transportmode, d.changeby, d.changetime, ifnull(c.comment, "no comment") as comment
+		from
+		(select *
+		from list_of_devices i
+		where changetime=(select max(j.changetime) from list_of_devices j where i.devicename=j.devicename)
+		order by ip asc) d
+		left join list_of_devices_comments c on c.id = d.deviceid,
+		(select ip, location, nlc, environment, transportmode
+		from list_of_scs a
+		where changetime=(select max(b.changetime) from list_of_scs b where a.scname=b.scname)
+		order by ip asc) s
+		where d.scip = s.ip
+		order by d.ip asc;`)
 	checkErr(err)
 	defer r.Close()
 
@@ -155,33 +169,43 @@ func handleListOfAllSCs(w http.ResponseWriter, req *http.Request) {
 		}
 		updateSc := Sc{}
 		newInputs := req.PostForm
-		updateScid := newInputs.Get("id") // Get the SC ID to be updated
-		updateScidInt, _ := strconv.Atoi(updateScid)
-		// Push the updated SC values
-		updateSc.Ip = newInputs.Get("new_ip" + updateScid)
-		updateSc.Location = newInputs.Get("new_location" + updateScid)
-		updateSc.Version = newInputs.Get("new_version" + updateScid)
-		updateSc.Nlc, _ = strconv.Atoi(newInputs.Get("new_nlc" + updateScid))
-		updateSc.Scnumber, _ = strconv.Atoi(newInputs.Get("new_scnumber" + updateScid))
-		updateSc.Transportmode = newInputs.Get("new_transportmode" + updateScid)
-		updateSc.Environment = newInputs.Get("new_environment" + updateScid)
-		updateSc.Priconc = newInputs.Get("new_priconc" + updateScid)
-		updateSc.Secconc = newInputs.Get("new_secconc" + updateScid)
+		updateSc.Scname = newInputs.Get("id") // Get the SC Name to be updated
+		//updateScidInt, _ := strconv.Atoi(updateScid)
+		// Push the updated (and old) SC values
+		updateSc.Ip = newInputs.Get("new_ip")
+		updateSc.Location = newInputs.Get("new_location")
+		updateSc.Version = newInputs.Get("new_version")
+		updateSc.Nlc, _ = strconv.Atoi(newInputs.Get("new_nlc"))
+		updateSc.Scnumber, _ = strconv.Atoi(newInputs.Get("new_scnumber"))
+		updateSc.Transportmode = newInputs.Get("new_transportmode")
+		updateSc.Environment = newInputs.Get("new_environment")
+		updateSc.Priconc = newInputs.Get("new_priconc")
+		updateSc.Secconc = newInputs.Get("new_secconc")
+		updateSc.Changeby = newInputs.Get("new_changeby")
+		updateSc.Comment = newInputs.Get("new_comment")
 		//updateSc.Devicesactive, _ = strconv.Atoi(newInputs.Get("new_devicesactive" + updateScid))
-
-		if updateScidInt != 0 {
-			updateIntoScs(db, updateScidInt, updateSc.Ip, updateSc.Location, updateSc.Version, updateSc.Nlc, updateSc.Scnumber, updateSc.Transportmode, updateSc.Environment, updateSc.Priconc, updateSc.Secconc)
-		} else {
-			insertIntoScs(db, updateSc.Ip, updateSc.Location, updateSc.Version, updateSc.Nlc, updateSc.Scnumber, updateSc.Transportmode, updateSc.Environment, updateSc.Priconc, updateSc.Secconc)
-		}
+		updateIntoScs(db, updateSc.Scname, updateSc.Ip, updateSc.Location, updateSc.Version, updateSc.Nlc, updateSc.Scnumber, updateSc.Transportmode, updateSc.Environment, updateSc.Priconc, updateSc.Secconc, updateSc.Changeby)
+		updateIntoScsComments(db, updateSc.Comment)
+		/*
+			if updateScidInt != 0 {
+				updateIntoScs(db, updateScidInt, updateSc.Ip, updateSc.Location, updateSc.Version, updateSc.Nlc, updateSc.Scnumber, updateSc.Transportmode, updateSc.Environment, updateSc.Priconc, updateSc.Secconc)
+			} else {
+				insertIntoScs(db, updateSc.Ip, updateSc.Location, updateSc.Version, updateSc.Nlc, updateSc.Scnumber, updateSc.Transportmode, updateSc.Environment, updateSc.Priconc, updateSc.Secconc)
+			}
+		*/
 	}
-	r, err := db.Query(`select s.*, d.devices
-		from list_of_scs s
+	// FIX THIS QUERY TO ACCOUNT FOR NEW COLUMN 'SCNAME'
+	r, err := db.Query(`select s.scname, s.scid, s.ip, s.location, s.version, s.nlc, s.scnumber, s.transportmode, s.environment, s.priconc, s.secconc, s.changeby, s.changetime, d.devices, ifnull(c.comment, "no comment") as comment
+		from (select *
+		from list_of_scs a
+		where changetime=(select max(b.changetime) from list_of_scs b where a.scname=b.scname)
+		order by ip asc) s
 		left join
-		(select list_of_scs.ip, count(list_of_devices.scip) as devices
+		(select list_of_scs.ip, count(distinct list_of_devices.scip) as devices
 		from list_of_scs
 		left join list_of_devices on list_of_scs.ip = list_of_devices.scip
 		group by list_of_scs.ip) d on s.ip = d.ip
+		left join list_of_scs_comments c on c.id = s.scid
 		order by s.ip asc;`)
 	checkErr(err)
 	defer r.Close()
@@ -201,9 +225,20 @@ func handleListOfAllBusRigs(w http.ResponseWriter, req *http.Request) {
 func handleLayout(w http.ResponseWriter, req *http.Request) {
 	db, err := testlabConnectDb()
 
-	r, err := db.Query(`SELECT d.deviceid, d.ip, d.version, d.version_rtd, d.devicetype, d.doppip, d.doppport, d.plinth, d.scip, d.version_eprom, 
-		s.location, s.nlc, s.environment, s.transportmode from list_of_devices d, list_of_scs s 
-		where d.scip = s.ip order by d.ip asc;`)
+	r, err := db.Query(`SELECT d.devicename, d.deviceid, d.ip, d.version, d.version_rtd, d.devicetype, d.doppip, d.doppport, d.plinth, d.scip, d.version_eprom,
+		s.location, s.nlc, s.environment, s.transportmode, d.changeby, d.changetime, ifnull(c.comment, "no comment") as comment
+		from
+		(select *
+		from list_of_devices i
+		where changetime=(select max(j.changetime) from list_of_devices j where i.devicename=j.devicename)
+		order by ip asc) d
+		left join list_of_devices_comments c on c.id = d.deviceid,
+		(select ip, location, nlc, environment, transportmode
+		from list_of_scs a
+		where changetime=(select max(b.changetime) from list_of_scs b where a.scname=b.scname)
+		order by ip asc) s
+		where d.scip = s.ip
+		order by d.ip asc;`)
 	checkErr(err)
 	defer r.Close()
 
@@ -242,6 +277,7 @@ func checkErr(err error) {
 	}
 }
 
+// FUNCTION DEPRECATED, DO NOT MAKE CHANGES
 func insertIntoScs(db *sql.DB, Ip string, Location string, Version string, Nlc int, Scnumber int, Transportmode string, Environment string, Priconc string, Secconc string) {
 	// prepare to insert some entries into list_of_scs
 	stmt, err := db.Prepare("insert into list_of_scs (Ip, Location, Version, Nlc, Scnumber, Transportmode, Environment, Priconc, Secconc) values (?, ?, ?, ?, ?, ?, ?, ?, ?)")
@@ -253,16 +289,30 @@ func insertIntoScs(db *sql.DB, Ip string, Location string, Version string, Nlc i
 }
 
 // Update records in the db - WIP, require data checking conditions
-func updateIntoScs(db *sql.DB, Scid int, Ip string, Location string, Version string, Nlc int, Scnumber int, Transportmode string, Environment string, Priconc string, Secconc string) {
+func updateIntoScs(db *sql.DB, Scname string, Ip string, Location string, Version string, Nlc int, Scnumber int, Transportmode string, Environment string, Priconc string, Secconc string, Changeby string) {
 	// prepare to update some entries into list_of_scs
-	stmt, err := db.Prepare("update list_of_scs set Ip=?, Location=?, Version=?, Nlc=?, Scnumber=?, Transportmode=?, Environment=?, Priconc=?, Secconc=? where Scid=?")
+	stmt, err := db.Prepare(`insert into list_of_scs (scname, ip, location, version, nlc, scnumber, transportmode, environment, priconc, secconc, changeby, changetime)
+							 values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())`)
 	checkErr(err)
-	result, err := stmt.Exec(Ip, Location, Version, Nlc, Scnumber, Transportmode, Environment, Priconc, Secconc, Scid)
+	result, err := stmt.Exec(Scname, Ip, Location, Version, Nlc, Scnumber, Transportmode, Environment, Priconc, Secconc, Changeby)
 	checkErr(err)
 	resRows, _ := result.RowsAffected()
 	fmt.Println(resRows, "rows affected")
 }
 
+// Update List of SCs comments table
+func updateIntoScsComments(db *sql.DB, Comment string) {
+	// prepare to update some entries into list_of_scs
+	stmt, err := db.Prepare(`insert into list_of_scs_comments (comment)
+							 values (?)`)
+	checkErr(err)
+	result, err := stmt.Exec(Comment)
+	checkErr(err)
+	resRows, _ := result.RowsAffected()
+	fmt.Println(resRows, "rows affected")
+}
+
+// DEPERECATED FUNCTIONS BELOW, DON'T MESS WITH IT
 func insertIntoDevicesRLG(db *sql.DB, Ip string, Scip string, VersionDevice string, VersionRtd string, Plinth int, VersionEprom string, DoppPort string, DoppIp string, Devicetype string) {
 	// prepare to insert some device into list_of_devices
 	stmt, err := db.Prepare("insert into list_of_devices (Ip, Scip, Version, Version_rtd, Plinth, Version_eprom, Doppport, Doppip, Devicetype) values (?, ?, ?, ?, ?, ?, ?, ?, ?)")
@@ -294,6 +344,28 @@ func insertIntoDevicesFLR(db *sql.DB, Ip string, Scip string, VersionDevice stri
 }
 
 // Update Device DB - WIP, require data checking conditions
+func updateIntoDevices(db *sql.DB, Devicename string, Ip string, VersionDevice string, VersionRtd string, Devicetype string, DoppIp string, DoppPort string, Plinth int, Scip string, VersionEprom string, Changeby string) {
+	// prepare to update some entries into list_of_scs
+	stmt, err := db.Prepare(`insert into list_of_devices (devicename, ip, version, version_rtd, devicetype, doppip, doppport, plinth, scip, version_eprom, changeby, changetime)
+	values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())`)
+	checkErr(err)
+	result, err := stmt.Exec(Devicename, Ip, VersionDevice, VersionRtd, Devicetype, DoppIp, DoppPort, Plinth, Scip, VersionEprom, Changeby)
+	checkErr(err)
+	resRows, _ := result.RowsAffected()
+	fmt.Println(resRows, "rows affected")
+}
+
+func updateIntoDevicesComments(db *sql.DB, Comment string) {
+	// prepare to update some entries into list_of_scs
+	stmt, err := db.Prepare(`insert into list_of_devices_comments (comment)
+	values (?)`)
+	checkErr(err)
+	result, err := stmt.Exec(Comment)
+	checkErr(err)
+	resRows, _ := result.RowsAffected()
+	fmt.Println(resRows, "rows affected")
+}
+
 // E2 Gate function
 func updateIntoDevicesE2G(db *sql.DB, Deviceid int, Ip string, Scip string, VersionDevice string, VersionRtd string, Plinth int) {
 	// prepare to update some entries into list_of_scs
@@ -328,7 +400,7 @@ func updateIntoDevicesFLR(db *sql.DB, Deviceid int, Ip string, Scip string, Vers
 func getListOfScs(r *sql.Rows, listOfScs []Sc) (listOfScsOut []Sc, err error) {
 	for i := 0; r.Next(); i++ {
 		newSc := Sc{}
-		err = r.Scan(&newSc.Scid, &newSc.Ip, &newSc.Location, &newSc.Version, &newSc.Nlc, &newSc.Scnumber, &newSc.Transportmode, &newSc.Environment, &newSc.Priconc, &newSc.Secconc, &newSc.Devicesactive)
+		err = r.Scan(&newSc.Scname, &newSc.Scid, &newSc.Ip, &newSc.Location, &newSc.Version, &newSc.Nlc, &newSc.Scnumber, &newSc.Transportmode, &newSc.Environment, &newSc.Priconc, &newSc.Secconc, &newSc.Changeby, &newSc.Changetime, &newSc.Devicesactive, &newSc.Comment)
 		checkErr(err)
 		listOfScs = append(listOfScs, newSc)
 		//fmt.Println(listOfScs[i])
@@ -341,9 +413,10 @@ func getListOfDevices(r *sql.Rows, listOfDevices []Device) (listOfDevicesOut []D
 		newDevice := Device{}
 		newSc := Sc{}
 		newDevice.ParentSc = &newSc
-		err = r.Scan(&newDevice.Deviceid, &newDevice.Ip, &newDevice.VersionDevice, &newDevice.VersionRtd, &newDevice.DeviceType,
+		err = r.Scan(&newDevice.Devicename, &newDevice.Deviceid, &newDevice.Ip, &newDevice.VersionDevice, &newDevice.VersionRtd, &newDevice.DeviceType,
 			&newDevice.DoppIp, &newDevice.DoppPort, &newDevice.Plinth, &newDevice.ParentSc.Ip, &newDevice.VersionEprom,
-			&newDevice.ParentSc.Location, &newDevice.ParentSc.Nlc, &newDevice.ParentSc.Environment, &newDevice.ParentSc.Transportmode)
+			&newDevice.ParentSc.Location, &newDevice.ParentSc.Nlc, &newDevice.ParentSc.Environment, &newDevice.ParentSc.Transportmode,
+			&newDevice.Changeby, &newDevice.Changetime, &newDevice.Comment)
 		checkErr(err)
 		if newDevice.DeviceType == "RLG MSTRP2" || newDevice.DeviceType == "RLG CTP" {
 			newDevice.IsRLG = true

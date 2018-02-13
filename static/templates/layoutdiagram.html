@@ -2,15 +2,64 @@
     <head>
         <meta charset="utf-8">
         <title>ITF - Visual Layout</title>
-        <script type="text/javascript">      
+        <script type="text/javascript">
+            
+            function toggleDetails() {
+                var x = document.getElementsByClassName("recDetails");
+                var i;
+                for (i=0; i< x.length; i++) {
+                    if (x[i].style.display == "block") {
+                        x[i].style.display = "none";
+                    } else {
+                        x[i].style.display = "block";
+                    }
+                }
+            }      
+
+            function filterEnvironment(c) {
+                var x, i;
+                x = document.getElementsByClassName("card");
+                if (c == "all") c = "";
+                for (i = 0; i < x.length; i++) {
+                    removeClass(x[i], "show");
+                    if (x[i].className.indexOf(c) > -1) addClass(x[i], "show");
+                }
+            }
+
+            function addClass(element, name) {
+                var i, arr1, arr2;
+                arr1 = element.className.split(" ");
+                arr2 = name.split(" ");
+                for (i = 0; i < arr2.length; i++) {
+                    if (arr1.indexOf(arr2[i]) == -1) {
+                    element.className += " " + arr2[i];
+                    }
+                }    
+            }
+
+            function removeClass(element, name) {
+                var i, arr1, arr2;
+                arr1 = element.className.split(" ");
+                arr2 = name.split(" ");
+                for (i = 0; i < arr2.length; i++) {
+                    while (arr1.indexOf(arr2[i]) > -1) {
+                    arr1.splice(arr1.indexOf(arr2[i]), 1);
+                    }
+                }
+                element.className = arr1.join(" ");
+            }
+
+
+
+            
         </script>
         <style>
-        h1, h2, h5, p {
+        h1, h2, p {
             font-family: arial, sans-serif;
         }
 
-        h4 {
-            font-family: arial, sans-serif;
+        h4, h5 {
+            font-family: 'Trebuchet MS';
             text-align: center;
         }
 
@@ -20,889 +69,1712 @@
             display: block;
         }
 
-        .card_flr {
+        .topnav {
+            background-color:rgb(65,105,225);
+            overflow: hidden;
+        }
+
+        .topnav a {
+            float: left;
+            color: white;
+            text-align: center;
+            font-family: 'Trebuchet MS';
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .topnav a:hover {
+            background-color: rgb(177, 188, 221);
+            color: white;
+        }
+
+        .topnav a.topactive {
+            background-color: rgb(0, 35, 102);
+        }
+
+        .toggleDetailsbtn {
+            border: none;
+            color: white;
+            padding: 14px 28px;
+            background-color: blueviolet
+        }
+
+        .toggleDetailsbtn:hover{
+            background-color: rgb(183, 142, 223);
+        }
+
+        .filterEnv {
+            border: none;
+            padding: 14px 28px;
+        }
+
+        .filterEnv:hover {
+            background-color: rgb(177, 188, 221);
+        }
+
+        .active {
+            background-color: rgb(65,105,225);
+            color: white;
+        }
+
+        .recDetails {
+            display: none;
+        }
+
+        .card {
             /* Add shadows to create the "card" effect */
             box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
             transition: 0.3s;
             border-radius: 5px; /* 5px rounded corners */
             margin-left: 20px;
             width: 150px;
-            height: 300px;
+            height: 210px;
+            display: none;
+            z-index: 1;
+        }
+
+        .show {
             display: inline-table;
         }
 
-        /* On mouse-over, add a deeper shadow */
-        .card_flr:hover {
-            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-        }
-
-        .card_rlg {
-            /* Add shadows to create the "card" effect */
+        /* Hover over device for detailed view */
+        .detailedView {
+            font-family: arial, sans-serif;
+            display: none;
+            position: absolute;
             box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-            transition: 0.3s;
-            border-radius: 5px; /* 5px rounded corners */
-            margin-left: 20px;
-            width: 150px;
-            height: 250px;
-            display: inline-table;
+            border-radius: 6px;
+            color: white;
+            background-color: rgba(65,105,225, 0.884);
+            z-index: 2;
+            padding: 4px 4px;
+            font-family: 'Trebuchet MS';
         }
 
+        .detailsCallout {
+            color: white;
+            font-style: italic;
+            font-family: 'Trebuchet MS';
+        }
+
+        .detailsValues {
+            color: white;
+            text-align: right;
+            font-family: 'Trebuchet MS';
+        }
+        
         /* On mouse-over, add a deeper shadow */
-        .card_rlg:hover {
-            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-        }
-
-        .card_e2g {
-            /* Add shadows to create the "card" effect */
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-            transition: 0.3s;
-            border-radius: 5px; /* 5px rounded corners */
-            margin-left: 20px;
-            width: 150px;
-            height: 250px;
-            display: inline-table;
-        }
-
-        /* On mouse-over, add a deeper shadow */
-        .card_e2g:hover {
-            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        .card:hover .detailedView {
+            display: block;
         }
 
         /* Add some padding inside the card container */
         .container {
             padding: 2px 12px;
         }
+
+        
         </style>
     </head>
     <body>
+        <div class="topnav">
+            <a class="topactive" href="/itf/layout">Visual Layout</a>
+            <a href="/itf/">List SCs</a>
+            <a href="/itf/devices">List Gates/FLRs</a>
+            <a href="/itf/busrigs">List BVs</a>
+        </div>
         <h1>ITF Visual Layout</h1>
-        <ul>
-            <li><a href="/itf/devices">List of FLRs and Gates</a></li>
-            <li><a href="/itf/">List of SCs</a></li>
-        </ul>
+        <button class="toggleDetailsbtn" onclick="toggleDetails()">Toggle Device Details</button>
+        <div id="filterEnvContainer">
+            <button class="filterEnv active" onclick="filterEnvironment('all')">Show All</button>
+            <button class="filterEnv" onclick="filterEnvironment('cubic')">Show Cubic</button>
+            <button class="filterEnv" onclick="filterEnvironment('ets')">Show ETS</button>
+        </div>
         <h2>FLRs</h2>
-        <div class="card_flr">
-            <h4>192.168.181.87</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.87"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+        {{range .}}
+            {{if eq .Ip "192.168.181.87"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.86</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.86"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.87</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.85</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.85"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
-                {{end}}
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
             {{end}}
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.84</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.84"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+        {{end}} 
+        {{range .}}
+            {{if eq .Ip "192.168.181.86"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.83</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.83"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.86</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.82</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.82"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}}  
+        {{range .}}
+            {{if eq .Ip "192.168.181.85"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.81</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.81"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.85</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.80</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.80"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}}   
+        {{range .}}
+            {{if eq .Ip "192.168.181.84"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.88</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.88"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.84</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.89</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.89"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}}
+        {{range .}}
+            {{if eq .Ip "192.168.181.83"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.90</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.90"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.83</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.91</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.91"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}} 
+        {{range .}}
+            {{if eq .Ip "192.168.181.82"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.92</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.92"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.82</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
                 {{end}}
-            {{end}} 
-        </div>
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}} 
+        {{range .}}
+            {{if eq .Ip "192.168.181.81"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
+                {{end}}
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.81</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                {{end}}
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}} 
+        {{range .}}
+            {{if eq .Ip "192.168.181.80"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
+                {{end}}
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.80</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                {{end}}
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}} 
+        {{range .}}
+            {{if eq .Ip "192.168.181.88"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
+                {{end}}
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.88</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                {{end}}
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}} 
+        {{range .}}
+            {{if eq .Ip "192.168.181.90"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
+                {{end}}
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.90</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                {{end}}
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}} 
+        {{range .}}
+            {{if eq .Ip "192.168.181.91"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
+                {{end}}
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.91</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                {{end}}
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}} 
+        {{range .}}
+            {{if eq .Ip "192.168.181.92"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
+                {{end}}
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.92</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                {{end}}
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}} 
         <br style="clear: both;"> 
-        <div class="card_flr">
-            <h4>192.168.181.93</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.93"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+        {{range .}}
+            {{if eq .Ip "192.168.181.93"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.94</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.94"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.93</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.95</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.95"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}} 
+        {{range .}}
+            {{if eq .Ip "192.168.181.94"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.96</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.96"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.94</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.97</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.97"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}}
+        {{range .}}
+            {{if eq .Ip "192.168.181.95"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.98</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.98"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.95</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.99</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.99"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}}
+        {{range .}}
+            {{if eq .Ip "192.168.181.96"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.100</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.100"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.96</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.101</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.101"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}}
+        {{range .}}
+            {{if eq .Ip "192.168.181.97"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_flr">
-            <h4>192.168.181.102</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.102"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.97</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
                 {{end}}
-            {{end}} 
-        </div>
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}}
+        {{range .}}
+            {{if eq .Ip "192.168.181.98"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
+                {{end}}
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.98</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                {{end}}
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}}
+        {{range .}}
+            {{if eq .Ip "192.168.181.99"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
+                {{end}}
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.99</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                {{end}}
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}}
+        {{range .}}
+            {{if eq .Ip "192.168.181.100"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
+                {{end}}
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.100</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                {{end}}
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}}
+        {{range .}}
+            {{if eq .Ip "192.168.181.101"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
+                {{end}}
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.101</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                {{end}}
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}}
+        {{range .}}
+            {{if eq .Ip "192.168.181.102"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
+                {{end}}
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.102</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                {{end}}
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}}
         <h2>Legacy Gates</h2>
-        <div class="card_rlg">
-            <h4>192.168.181.66</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.66"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+        {{range .}}
+            {{if eq .Ip "192.168.181.66"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_rlg">
-            <h4>192.168.181.67</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.67"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <h4>192.168.181.66</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
                 {{end}}
-            {{end}} 
-        </div>
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+            </div>  
+            {{end}}
+        {{end}}
+        {{range .}}
+            {{if eq .Ip "192.168.181.67"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
+                {{end}}
+                <h4>192.168.181.67</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                {{end}}
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+            </div>  
+            {{end}}
+        {{end}}
         <br style="clear: both;"> 
-        <div class="card_rlg">
-            <h4>192.168.181.60</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.60"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+        {{range .}}
+            {{if eq .Ip "192.168.181.60"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_rlg">
-            <h4>192.168.181.61</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.61"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <h4>192.168.181.60</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_rlg">
-            <h4>192.168.181.62</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.62"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+            </div>  
+            {{end}}
+        {{end}}
+        {{range .}}
+            {{if eq .Ip "192.168.181.61"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
                 {{end}}
-            {{end}} 
-        </div>
+                <h4>192.168.181.61</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                {{end}}
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+            </div>  
+            {{end}}
+        {{end}}
+        {{range .}}
+            {{if eq .Ip "192.168.181.62"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
+                {{end}}
+                <h4>192.168.181.62</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                {{end}}
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+            </div>  
+            {{end}}
+        {{end}}
         <br style="clear: both;"> 
-        <div class="card_rlg">
-            <h4>192.168.181.63</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.63"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+        {{range .}}
+            {{if eq .Ip "192.168.181.63"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_rlg">
-            <h4>192.168.181.64</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.64"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <h4>192.168.181.63</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_rlg">
-            <h4>192.168.181.65</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.65"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}<br>
-                        {{.DoppIp}}<br>
-                        {{.DoppPort}}
-                        </p>
-                    </div>
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+            </div>  
+            {{end}}
+        {{end}}
+        {{range .}}
+            {{if eq .Ip "192.168.181.64"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
                 {{end}}
-            {{end}} 
-        </div>
+                <h4>192.168.181.64</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                {{end}}
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+            </div>  
+            {{end}}
+        {{end}}
+        {{range .}}
+            {{if eq .Ip "192.168.181.65"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
+                {{end}}
+                <h4>192.168.181.65</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                {{end}}
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+            </div>  
+            {{end}}
+        {{end}}
         <h2>E2 Gates</h2>
-        <div class="card_e2g">
-            <h4>192.168.181.74</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.74"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}
-                        </p>
-                    </div>
+        {{range .}}
+            {{if eq .Ip "192.168.181.74"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_e2g">
-            <h4>192.168.181.73</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.73"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}
-                        </p>
-                    </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.74</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_e2g">
-            <h4>192.168.181.72</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.72"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}
-                        </p>
-                    </div>
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}}
+        {{range .}}
+            {{if eq .Ip "192.168.181.73"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_e2g">
-            <h4>192.168.181.71</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.71"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}
-                        </p>
-                    </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.73</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
                 {{end}}
-            {{end}} 
-        </div>
-        <div class="card_e2g">
-            <h4>192.168.181.70</h4>
-            {{range .}}
-                {{if eq .Ip "192.168.181.70"}}
-                    {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
-                        <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Rail"}}
-                        <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
-                    {{else if eq .ParentSc.Transportmode "Light Rail"}}
-                        <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
-                    {{end}}
-                    <div class="container">
-                        <h4>{{.ParentSc.Location}}</h4>
-                        <h5>{{.ParentSc.Environment}}</h5>
-                        <p>
-                        {{.ParentSc.Ip}}
-                        </p>
-                    </div>
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}}
+        {{range .}}
+            {{if eq .Ip "192.168.181.72"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
                 {{end}}
-            {{end}} 
-        </div>
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.72</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                {{end}}
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}}
+        {{range .}}
+            {{if eq .Ip "192.168.181.71"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
+                {{end}}
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.71</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                {{end}}
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+                
+            </div>  
+            {{end}}
+        {{end}}
+        {{range .}}
+            {{if eq .Ip "192.168.181.70"}}
+                {{if eq .ParentSc.Environment "Cubic"}}
+                    <div class="card cubic">
+                {{else if eq .ParentSc.Environment "ETS"}}
+                    <div class="card ets">
+                {{else}}
+                    <div class="card">
+                {{end}}
+                <div class="detailedView">
+                    <b>Details</b>
+                    <table>
+                        <tr><td class="detailsCallout">SC IP</td><td class="detailsValues">{{.ParentSc.Ip}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP IP</td><td class="detailsValues">{{.DoppIp}}</td></tr>
+                        <tr><td class="detailsCallout">DOPP Port</td><td class="detailsValues">{{.DoppPort}}</td></tr>
+                        <tr><td class="detailsCallout">NLC</td><td class="detailsValues">{{.ParentSc.Nlc}}</td></tr>
+                        <tr><td class="detailsCallout">Version</td><td class="detailsValues">{{.VersionDevice}}</td></tr>
+                        <tr><td class="detailsCallout">RTD</td><td class="detailsValues">{{.VersionRtd}}</td></tr>
+                        <tr><td class="detailsCallout">Plinth</td><td class="detailsValues">{{.Plinth}}</td></tr>
+                        {{if .IsRLG}}
+                        <tr><td class="detailsCallout">EPROM</td><td class="detailsValues">{{.VersionEprom}}</td></tr>
+                        {{end}}
+                    </table>
+                </div>
+                <h4>192.168.181.70</h4>
+                {{if eq .ParentSc.Transportmode "Ferry" "Fezza"}}
+                    <img src="../static/images/mode-ferry.png" alt="Ferry" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Rail"}}
+                    <img src="../static/images/mode-train.png" alt="Rail" style="width:25%">
+                {{else if eq .ParentSc.Transportmode "Light Rail"}}
+                    <img src="../static/images/mode-lightrail.png" alt="LightRail" style="width:25%">
+                {{end}}
+                <div class="container">
+                    <h4>{{.ParentSc.Location}}</h4>
+                    <h5>{{.ParentSc.Environment}}</h5>
+                    <p class="recDetails">
+                    {{.ParentSc.Ip}}<br>
+                    {{.DoppIp}}<br>
+                    {{.DoppPort}}
+                    </p>
+                </div>
+            </div>  
+            {{end}}
+        {{end}}
+        <!--Show all the devices by default -->
+        <script>
+            filterEnvironment("all")
+            var btnContainer = document.getElementById("filterEnvContainer");
+            var btns = btnContainer.getElementsByClassName("filterEnv");
+            for (var i = 0; i < btns.length; i++) {
+                btns[i].addEventListener("click", function() {
+                    var current = document.getElementsByClassName("active");
+                    current[0].className = current[0].className.replace(" active", "");
+                    this.className += " active";
+                });
+            }
+        </script>
     </body>
 </html>

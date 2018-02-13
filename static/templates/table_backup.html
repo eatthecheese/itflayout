@@ -1,0 +1,181 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>ITF - List of SCs</title>
+        <script type="text/javascript">
+        function edit_row(id) {
+            var cur_ip=document.getElementById("ip"+id).innerHTML;
+            var cur_location=document.getElementById("location"+id).innerHTML;
+            var cur_version=document.getElementById("version"+id).innerHTML;
+            var cur_nlc=document.getElementById("nlc"+id).innerHTML;
+            var cur_scnumber=document.getElementById("scnumber"+id).innerHTML;
+            var cur_transportmode=document.getElementById("transportmode"+id).innerHTML;
+            var cur_environment=document.getElementById("environment"+id).innerHTML;
+            var cur_priconc=document.getElementById("priconc"+id).innerHTML;
+            var cur_secconc=document.getElementById("secconc"+id).innerHTML;
+            //var cur_devicesactive=document.getElementById("devicesactive"+id).innerHTML;
+            var cur_id = id.toString();
+
+            document.getElementById("ip"+id).innerHTML="<input type='text' id='ip_text"+id+"' name='new_ip"+id+"' value='"+cur_ip+"'>";
+            document.getElementById("formdummy").innerHTML="<input type='hidden' name='id' value='"+cur_id+"'>";
+            document.getElementById("location"+id).innerHTML="<input type='text' id='location_text"+id+"' name='new_location"+id+"' value='"+cur_location+"'>";
+            document.getElementById("version"+id).innerHTML="<input type='text' id='version_text"+id+"' name='new_version"+id+"' value='"+cur_version+"'>";
+            document.getElementById("nlc"+id).innerHTML="<input type='text'id='nlc_text"+id+"' name='new_nlc"+id+"' value='"+cur_nlc+"'>";
+            document.getElementById("scnumber"+id).innerHTML="<input type='text' id='scnumber_text"+id+"' name='new_scnumber"+id+"' value='"+cur_scnumber+"'>";
+            document.getElementById("transportmode"+id).innerHTML="<input type='text' id='transportmode_text"+id+"' name='new_transportmode"+id+"' value='"+cur_transportmode+"'>";
+            document.getElementById("environment"+id).innerHTML="<input type='text' id='environment_text"+id+"' name='new_environment"+id+"' value='"+cur_environment+"'>";
+            document.getElementById("priconc"+id).innerHTML="<input type='text' id='priconc_text"+id+"' name='new_priconc"+id+"' value='"+cur_priconc+"'>";
+            document.getElementById("secconc"+id).innerHTML="<input type='text' id='secconc_text"+id+"' name='new_secconc"+id+"' value='"+cur_secconc+"'>";
+            //document.getElementById("devicesactive"+id).innerHTML="<input type='text' id='devicesactive_text"+id+"' name='new_devicesactive"+id+"' value='"+cur_devicesactive+"'>";
+
+            document.getElementById("edit_button0").style.display="none";
+            {{range .}}
+                document.getElementById("edit_button"+{{.Scid}}).style.display="none";
+            {{end}}
+            document.getElementById("save_button"+id).style.display="block";
+        }
+
+        function save_row(id) {
+            document.getElementById("formtable").submit();
+        }      
+
+        function toggle_popup_form() {
+            var x = document.getElementById("popupform");
+            if (x.style.display == "block") {
+                x.style.display = "none";
+            } else {
+                x.style.display = "block";
+            }
+        }
+        </script>
+        <style>
+        h1, h2 {
+            font-family: arial, sans-serif;
+        }
+    
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        td, th {
+            border: 1px solid #dfdcdc;
+            text-align: left;
+            padding: 8px;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .dataheader {
+            text-align:right;
+        }
+
+        .edit_button {
+            border: none;
+            color: white;
+            padding: 4px 8px;
+            background-color: rgb(65,105,225);
+        }
+
+        .edit_button:hover {
+            background-color: rgb(177, 188, 221);
+        }
+
+        .save_button {
+            border: none;
+            color: white;
+            padding: 4px 8px;
+            background-color: rgb(65,105,225);
+        }
+
+        .save_button:hover {
+            background-color: rgb(177, 188, 221);
+        }
+        </style>
+        <link rel="stylesheet" type="text/css" href="../static/templates/stylesheets/topnavbar.css">
+        <link rel="stylesheet" type="text/css" href="../static/templates/stylesheets/popupforms.css">
+    </head>
+    <body>
+        <div class="topnav">
+            <a href="/itf/layout">Visual Layout</a>
+            <a class="topactive" href="/itf/">List SCs</a>
+            <a href="/itf/devices">List Gates/FLRs</a>
+            <a href="/itf/busrigs">List BVs</a>
+        </div>
+        <h1>List of SCs</h1>
+        <form id="formtable" action="" method="post"><table>
+            <tr>
+                <th>SC Name</th>
+                <th>IP</th>
+                <th>Location Name</th>
+                <th class="dataheader">SC Version</th>
+                <th class="dataheader">NLC</th>
+                <th class="dataheader">SC</th>
+                <th class="dataheader">Transport Mode</th>
+                <th class="dataheader">Environment</th>
+                <th class="dataheader">DGC Pri Conc</th>
+                <th class="dataheader">DGC Sec Conc</th>
+                <th class="dataheader">Devices?</th>
+                <th class="dataheader">Last Update</th>
+                <th class="dataheader">Updated by</th>
+            </tr>
+            {{range .}}
+            <tr id="row{{.Scid}}">
+                <td id="ip{{.Scname}}">{{.Scname}}</td>
+                <td id="ip{{.Scid}}">{{.Ip}}</td>
+                <td id="location{{.Scid}}">{{.Location}}</td>
+                <td class="dataheader" id="version{{.Scid}}">{{.Version}}</td>
+                <td class="dataheader" id="nlc{{.Scid}}">{{.Nlc}}</td>
+                <td class="dataheader" id="scnumber{{.Scid}}">{{.Scnumber}}</td>
+                <td class="dataheader" id="transportmode{{.Scid}}">{{.Transportmode}}</td>
+                <td class="dataheader" id="environment{{.Scid}}">{{.Environment}}</td>
+                <td class="dataheader" id="priconc{{.Scid}}">{{.Priconc}}</td>
+                <td class="dataheader" id="secconc{{.Scid}}">{{.Secconc}}</td>
+                <td class="dataheader" id="devicesactive{{.Scid}}">{{.Devicesactive}}</td>
+                <td class="dataheader" id="changetime{{.Scid}}">{{.Changetime}}</td>
+                <td class="dataheader" id="changeby{{.Scid}}">{{.Changeby}}</td>
+                <td>
+                    <input type="button" id="edit_button{{.Scid}}" value="Edit" class="edit_button" onclick="edit_row('{{.Scid}}')">
+                    <input hidden type='button' id="save_button{{.Scid}}" value="Save" class="save_button" onclick="save_row('{{.Scid}}')">
+                    <input type='button' id="popup_edit{{.Scid}}" value="Edit2" class="edit_button" onclick="toggle_popup_form()">
+                </td>
+            </tr>
+            {{end}}
+            <!-- '0' is a magic number for a new row, go handler takes care of this -->
+            <tr id="row0">
+                <td id="ip0"></td>
+                <td id="location0"></td>
+                <td id="version0"></td>
+                <td id="nlc0"></td>
+                <td id="scnumber0"></td>
+                <td id="transportmode0"></td>
+                <td id="environment0"></td>
+                <td id="priconc0"></td>
+                <td id="secconc0"></td>
+                <td id="devicesactive0"></td>
+                <td>
+                    <input type="button" id="edit_button0" value="Add" class="edit_button" onclick="edit_row('0')">
+                    <input hidden type="button" id="save_button0" value="Save" class="save_button" onclick="save_row('0')">
+                </td>
+            </tr>
+        </table>
+        <p id="formdummy"></p></form>
+
+        <div id="popupform">
+
+            <h2>Editing 192.168.181.sss</h2>
+            <small>this is some small text</small>
+            <form id="formpopup">
+                <input value="192.168.181.xx" type="text" class="popuptextbox" />
+                <input value="Location here" type="text" class="popuptextbox"/>
+                <textarea placeholder="Comment" class="popuptextarea"></textarea>
+
+                <input class="save_button" type="button" value="Save">
+            </form>
+
+        </div>
+    </body>
+</html>

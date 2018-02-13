@@ -2,73 +2,140 @@
     <head>
         <title>ITF - List of Gates and FLRs</title>
         <script type="text/javascript">
-            function edit_row(id) {
-                var cur_ip = document.getElementById("ip"+id).innerHTML;
-                var cur_scip = document.getElementById("scip"+id).innerHTML;
-                var cur_versiondevice = document.getElementById("versiondevice"+id).innerHTML;
-                var cur_versionrtd = document.getElementById("versionrtd"+id).innerHTML;
-                var cur_plinth = document.getElementById("plinth"+id).innerHTML;
-                var cur_id = id.toString();
+        function edit_row(id) {
+            var cur_ip = document.getElementById("ip"+id).innerHTML;
+            var cur_scip = document.getElementById("scip"+id).innerHTML;
+            var cur_versiondevice = document.getElementById("versiondevice"+id).innerHTML;
+            var cur_versionrtd = document.getElementById("versionrtd"+id).innerHTML;
+            var cur_plinth = document.getElementById("plinth"+id).innerHTML;
+            var cur_id = id.toString();
 
-                document.getElementById("ip"+id).innerHTML="<input type='text' id='ip_text"+id+"' name='new_ip"+id+"' value='"+cur_ip+"'>";
-                document.getElementById("formdummy").innerHTML="<input type='hidden' name='id' value='"+cur_id+"'>";
-                document.getElementById("scip"+id).innerHTML="<input type='text' id='scip_text"+id+"' name='new_scip"+id+"' value='"+cur_scip+"'>";
-                document.getElementById("versiondevice"+id).innerHTML="<input type='text' id='versiondevice_text"+id+"' name='new_versiondevice"+id+"' value='"+cur_versiondevice+"'>";
-                document.getElementById("versionrtd"+id).innerHTML="<input type='text' id='versionrtd_text"+id+"' name='new_versionrtd"+id+"' value='"+cur_versionrtd+"'>";
-                document.getElementById("plinth"+id).innerHTML="<input type='text' id='plinth_text"+id+"' name='new_plinth"+id+"' value='"+cur_plinth+"'>";
-                document.getElementById("formdummy2").innerHTML="<input type='hidden' name='devicetype' value='e2gate'>";
-                {{range .}}
-                    if (id == "{{.Deviceid}}") {
-                        {{if .IsRLG}}
-                            document.getElementById("formdummy2").innerHTML="<input type='hidden' name='devicetype' value='rlg'>";
-                            var cur_versioneprom = document.getElementById("versioneprom"+id).innerHTML;
-                            document.getElementById("versioneprom"+id).innerHTML="<input type='text' id='versioneprom_text"+id+"' name='new_versioneprom"+id+"' value='"+cur_versioneprom+"'>";
-                            var cur_doppport = document.getElementById("doppport"+id).innerHTML;
-                            var cur_doppip = document.getElementById("doppip"+id).innerHTML;
-                            document.getElementById("doppport"+id).innerHTML="<input type='text' id='doppport_text"+id+"' name='new_doppport"+id+"' value='"+cur_doppport+"'>";
-                            document.getElementById("doppip"+id).innerHTML="<input type='text' id='doppip_text"+id+"' name='new_doppip"+id+"' value='"+cur_doppip+"'>";
-                        {{end}}
-                        {{if .IsFLR}}
-                            document.getElementById("formdummy2").innerHTML="<input type='hidden' name='devicetype' value='flr'>";
-                            var cur_doppport = document.getElementById("doppport"+id).innerHTML;
-                            var cur_doppip = document.getElementById("doppip"+id).innerHTML;
-                            document.getElementById("doppport"+id).innerHTML="<input type='text' id='doppport_text"+id+"' name='new_doppport"+id+"' value='"+cur_doppport+"'>";
-                            document.getElementById("doppip"+id).innerHTML="<input type='text' id='doppip_text"+id+"' name='new_doppip"+id+"' value='"+cur_doppip+"'>";
-                        {{end}}
-                    }
-                {{end}}
-                if (id == "100") {
-                    document.getElementById("formdummy2").innerHTML="<input type='hidden' name='devicetype' value='rlg'>";
-                    var cur_versioneprom = document.getElementById("versioneprom"+id).innerHTML;
-                    document.getElementById("versioneprom"+id).innerHTML="<input type='text' id='versioneprom_text"+id+"' name='new_versioneprom"+id+"' value='"+cur_versioneprom+"'>";
-                    var cur_doppport = document.getElementById("doppport"+id).innerHTML;
-                    var cur_doppip = document.getElementById("doppip"+id).innerHTML;
-                    document.getElementById("doppport"+id).innerHTML="<input type='text' id='doppport_text"+id+"' name='new_doppport"+id+"' value='"+cur_doppport+"'>";
-                    document.getElementById("doppip"+id).innerHTML="<input type='text' id='doppip_text"+id+"' name='new_doppip"+id+"' value='"+cur_doppip+"'>";
-                } else if (id == "102") {
-                    document.getElementById("formdummy2").innerHTML="<input type='hidden' name='devicetype' value='flr'>";
-                    var cur_doppport = document.getElementById("doppport"+id).innerHTML;
-                    var cur_doppip = document.getElementById("doppip"+id).innerHTML;
-                    document.getElementById("doppport"+id).innerHTML="<input type='text' id='doppport_text"+id+"' name='new_doppport"+id+"' value='"+cur_doppport+"'>";
-                    document.getElementById("doppip"+id).innerHTML="<input type='text' id='doppip_text"+id+"' name='new_doppip"+id+"' value='"+cur_doppip+"'>";
-                }  else if (id == "101") {
-                    document.getElementById("formdummy2").innerHTML="<input type='hidden' name='devicetype' value='e2gate'>";
+            document.getElementById("ip"+id).innerHTML="<input type='text' id='ip_text"+id+"' name='new_ip"+id+"' value='"+cur_ip+"'>";
+            document.getElementById("formdummy").innerHTML="<input type='hidden' name='id' value='"+cur_id+"'>";
+            document.getElementById("scip"+id).innerHTML="<input type='text' id='scip_text"+id+"' name='new_scip"+id+"' value='"+cur_scip+"'>";
+            document.getElementById("versiondevice"+id).innerHTML="<input type='text' id='versiondevice_text"+id+"' name='new_versiondevice"+id+"' value='"+cur_versiondevice+"'>";
+            document.getElementById("versionrtd"+id).innerHTML="<input type='text' id='versionrtd_text"+id+"' name='new_versionrtd"+id+"' value='"+cur_versionrtd+"'>";
+            document.getElementById("plinth"+id).innerHTML="<input type='text' id='plinth_text"+id+"' name='new_plinth"+id+"' value='"+cur_plinth+"'>";
+            document.getElementById("formdummy2").innerHTML="<input type='hidden' name='devicetype' value='e2gate'>";
+            {{range .}}
+                if (id == "{{.Deviceid}}") {
+                    {{if .IsRLG}}
+                        document.getElementById("formdummy2").innerHTML="<input type='hidden' name='devicetype' value='rlg'>";
+                        var cur_versioneprom = document.getElementById("versioneprom"+id).innerHTML;
+                        document.getElementById("versioneprom"+id).innerHTML="<input type='text' id='versioneprom_text"+id+"' name='new_versioneprom"+id+"' value='"+cur_versioneprom+"'>";
+                        var cur_doppport = document.getElementById("doppport"+id).innerHTML;
+                        var cur_doppip = document.getElementById("doppip"+id).innerHTML;
+                        document.getElementById("doppport"+id).innerHTML="<input type='text' id='doppport_text"+id+"' name='new_doppport"+id+"' value='"+cur_doppport+"'>";
+                        document.getElementById("doppip"+id).innerHTML="<input type='text' id='doppip_text"+id+"' name='new_doppip"+id+"' value='"+cur_doppip+"'>";
+                    {{end}}
+                    {{if .IsFLR}}
+                        document.getElementById("formdummy2").innerHTML="<input type='hidden' name='devicetype' value='flr'>";
+                        var cur_doppport = document.getElementById("doppport"+id).innerHTML;
+                        var cur_doppip = document.getElementById("doppip"+id).innerHTML;
+                        document.getElementById("doppport"+id).innerHTML="<input type='text' id='doppport_text"+id+"' name='new_doppport"+id+"' value='"+cur_doppport+"'>";
+                        document.getElementById("doppip"+id).innerHTML="<input type='text' id='doppip_text"+id+"' name='new_doppip"+id+"' value='"+cur_doppip+"'>";
+                    {{end}}
                 }
+            {{end}}
+            if (id == "100") {
+                document.getElementById("formdummy2").innerHTML="<input type='hidden' name='devicetype' value='rlg'>";
+                var cur_versioneprom = document.getElementById("versioneprom"+id).innerHTML;
+                document.getElementById("versioneprom"+id).innerHTML="<input type='text' id='versioneprom_text"+id+"' name='new_versioneprom"+id+"' value='"+cur_versioneprom+"'>";
+                var cur_doppport = document.getElementById("doppport"+id).innerHTML;
+                var cur_doppip = document.getElementById("doppip"+id).innerHTML;
+                document.getElementById("doppport"+id).innerHTML="<input type='text' id='doppport_text"+id+"' name='new_doppport"+id+"' value='"+cur_doppport+"'>";
+                document.getElementById("doppip"+id).innerHTML="<input type='text' id='doppip_text"+id+"' name='new_doppip"+id+"' value='"+cur_doppip+"'>";
+            } else if (id == "102") {
+                document.getElementById("formdummy2").innerHTML="<input type='hidden' name='devicetype' value='flr'>";
+                var cur_doppport = document.getElementById("doppport"+id).innerHTML;
+                var cur_doppip = document.getElementById("doppip"+id).innerHTML;
+                document.getElementById("doppport"+id).innerHTML="<input type='text' id='doppport_text"+id+"' name='new_doppport"+id+"' value='"+cur_doppport+"'>";
+                document.getElementById("doppip"+id).innerHTML="<input type='text' id='doppip_text"+id+"' name='new_doppip"+id+"' value='"+cur_doppip+"'>";
+            }  else if (id == "101") {
+                document.getElementById("formdummy2").innerHTML="<input type='hidden' name='devicetype' value='e2gate'>";
+            }
 
-                document.getElementById("edit_button100").style.display="none";
-                document.getElementById("edit_button101").style.display="none";
-                document.getElementById("edit_button102").style.display="none";
-                {{range .}}
-                    document.getElementById("edit_button"+{{.Deviceid}}).style.display="none";
+            document.getElementById("edit_button100").style.display="none";
+            document.getElementById("edit_button101").style.display="none";
+            document.getElementById("edit_button102").style.display="none";
+            {{range .}}
+                document.getElementById("edit_button"+{{.Deviceid}}).style.display="none";
+            {{end}}
+            document.getElementById("save_button"+id).style.display="block";
+        }
+
+        function save_row(id) {
+
+            document.getElementById("formtable").submit();     
+
+        }
+
+        function cancel_popup_form() {
+            var x = document.getElementById("popupform");
+            if (x.style.display == "block") {
+                x.style.display = "none";
+            } else {
+                x.style.display = "block";
+            }
+        }
+
+        function toggle_popup_form(id) {
+            var x = document.getElementById("popupform");
+            if (x.style.display == "block") {
+                x.style.display = "none";
+            } else {
+                x.style.display = "block";
+            }
+
+            var cur_ip=document.getElementById("ip"+id).innerHTML;
+            var cur_scip=document.getElementById("scip"+id).innerHTML;
+            var cur_sclocation=document.getElementById("sclocation"+id).innerHTML;
+            var cur_scenvironment=document.getElementById("scenvironment"+id).innerHTML;
+            var cur_versiondevice=document.getElementById("versiondevice"+id).innerHTML;
+            var cur_versionrtd=document.getElementById("versionrtd"+id).innerHTML;
+            var cur_plinth=document.getElementById("plinth"+id).innerHTML;
+
+            document.getElementById("editformheading").innerHTML="Editing "+cur_ip+" (" +id+")";
+            document.getElementById("editformbody").innerHTML="Currently at "+cur_sclocation+", " +cur_scenvironment;
+            document.getElementById("popupid").value=id;
+            document.getElementById("popupip").value=cur_ip;
+            document.getElementById("popupscip").value=cur_scip;
+            document.getElementById("popupversiondevice").value=cur_versiondevice;
+            document.getElementById("popupversionrtd").value=cur_versionrtd;
+            document.getElementById("popupplinth").value=cur_plinth;
+
+            document.getElementById("popupversioneprom").style.visibility='hidden';
+            document.getElementById("popupdoppport").style.visibility='hidden';
+            document.getElementById("popupdoppip").style.visibility='hidden';
+
+            document.getElementById("popupdevicetype").value="e2gate"; //E2 gate by default, now check if isRLG or is FLR
+
+            {{range .}}
+            if (id == "{{.Devicename}}") {
+                {{if .IsRLG}}
+                document.getElementById("popupdevicetype").value="rlg";
+                var cur_versioneprom=document.getElementById("versioneprom"+id).innerHTML;
+                var cur_doppport=document.getElementById("doppport"+id).innerHTML;
+                var cur_doppip=document.getElementById("doppip"+id).innerHTML;
+                document.getElementById("popupversioneprom").value=cur_versioneprom;
+                document.getElementById("popupdoppport").value=cur_doppport;
+                document.getElementById("popupdoppip").value=cur_doppip;
+                document.getElementById("popupversioneprom").style.visibility='visible';
+                document.getElementById("popupdoppport").style.visibility='visible';
+                document.getElementById("popupdoppip").style.visibility='visible';
                 {{end}}
-                document.getElementById("save_button"+id).style.display="block";
+                {{if .IsFLR}}
+                document.getElementById("popupdevicetype").value="flr";
+                var cur_doppport=document.getElementById("doppport"+id).innerHTML;
+                var cur_doppip=document.getElementById("doppip"+id).innerHTML;
+                document.getElementById("popupdoppport").value=cur_doppport;
+                document.getElementById("popupdoppip").value=cur_doppip;
+                document.getElementById("popupdoppport").style.visibility='visible';
+                document.getElementById("popupdoppip").style.visibility='visible';
+                {{end}}
             }
-
-            function save_row(id) {
-
-                document.getElementById("formtable").submit();     
-
-            }
+            {{end}}
+        }
         </script>
         <style>
             h1, h2 {
@@ -82,27 +149,53 @@
             }
             
             td, th {
-                border: 1px solid #ffffff;
+                border: 1px solid #dfdcdc;
                 text-align: left;
                 padding: 8px;
             }
             
             tr:nth-child(even) {
-                background-color: #fafafa;
+                background-color: #ececec;
+            }
+
+            .edit_button {
+                border: none;
+                color: white;
+                padding: 4px 8px;
+                background-color: rgb(65,105,225);
+            }
+
+            .edit_button:hover {
+                background-color: rgb(177, 188, 221);
+            }
+
+            .save_button {
+                border: none;
+                color: white;
+                padding: 4px 8px;
+                background-color: rgb(65,105,225);
+            }
+
+            .save_button:hover {
+                background-color: rgb(177, 188, 221);
             }
         </style>
+        <link rel="stylesheet" type="text/css" href="../static/templates/stylesheets/topnavbar.css">
+        <link rel="stylesheet" type="text/css" href="../static/templates/stylesheets/popupforms.css">
     </head>
     <body>
+        <div class="topnav">
+            <a href="/itf/layout">Visual Layout</a>
+            <a href="/itf/">List SCs</a>
+            <a class="topactive" href="/itf/devices">List Gates/FLRs</a>
+            <a href="/itf/busrigs">List BVs</a>
+        </div>
         <h1>List of FLRs and Gates</h1>
-        <ul>
-            <li><a href="/itf/">List of SCs</a></li>
-            <li><a href="/itf/busrigs">List of Bus Rigs</a></li>
-            <li><a href="/itf/layout">Visual Layout</a></li>
-        </ul> 
         <h2>Legacy Gates</h2>
         <form id="formtable" action="" method="post">
         <table>
             <tr>
+                <th>Device Name</th>
                 <th>IP</th>
                 <th>SC IP</th>
                 <th>Location</th>
@@ -114,30 +207,36 @@
                 <th>EPROM</th>
                 <th>DOPP Port</th>
                 <th>DOPP IP</th>
+                <th>Last Update</th>
+                <th>Updated By</th>
+                <th>Comments</th>
             </tr>
             {{range .}}
                 {{if .IsRLG}}
                 <tr>
-                    <td id="ip{{.Deviceid}}">{{.Ip}}</td>
-                    <td id="scip{{.Deviceid}}">{{.ParentSc.Ip}}</td>
-                    <td id="sclocation{{.Deviceid}}">{{.ParentSc.Location}}</td>
-                    <td id="scenvironment{{.Deviceid}}">{{.ParentSc.Environment}}</td>
-                    <td id="sctransportmode{{.Deviceid}}">{{.ParentSc.Transportmode}}</td>
-                    <td id="versiondevice{{.Deviceid}}">{{.VersionDevice}}</td>
-                    <td id="versionrtd{{.Deviceid}}">{{.VersionRtd}}</td>
-                    <td id="plinth{{.Deviceid}}">{{.Plinth}}</td>
-                    <td id="versioneprom{{.Deviceid}}">{{.VersionEprom}}</td>
-                    <td id="doppport{{.Deviceid}}">{{.DoppPort}}</td>
-                    <td id="doppip{{.Deviceid}}">{{.DoppIp}}</td>
+                    <td id="devicename{{.Devicename}}">{{.Devicename}}</td>
+                    <td id="ip{{.Devicename}}">{{.Ip}}</td>
+                    <td id="scip{{.Devicename}}">{{.ParentSc.Ip}}</td>
+                    <td id="sclocation{{.Devicename}}">{{.ParentSc.Location}}</td>
+                    <td id="scenvironment{{.Devicename}}">{{.ParentSc.Environment}}</td>
+                    <td id="sctransportmode{{.Devicename}}">{{.ParentSc.Transportmode}}</td>
+                    <td id="versiondevice{{.Devicename}}">{{.VersionDevice}}</td>
+                    <td id="versionrtd{{.Devicename}}">{{.VersionRtd}}</td>
+                    <td id="plinth{{.Devicename}}">{{.Plinth}}</td>
+                    <td id="versioneprom{{.Devicename}}">{{.VersionEprom}}</td>
+                    <td id="doppport{{.Devicename}}">{{.DoppPort}}</td>
+                    <td id="doppip{{.Devicename}}">{{.DoppIp}}</td>
+                    <td id="changetime{{.Devicename}}">{{.Changetime}}</td>
+                    <td id="changeby{{.Devicename}}">{{.Changeby}}</td>
+                    <td id="comment{{.Devicename}}">{{.Comment}}</td>
                     <td>
-                        <input type="button" id="edit_button{{.Deviceid}}" value="Edit" class="edit_button" onclick="edit_row('{{.Deviceid}}')">
-                        <input hidden type='button' id="save_button{{.Deviceid}}" value="Save" class="save_button" onclick="save_row('{{.Deviceid}}')">
+                        <input type="button" id="edit_button{{.Devicename}}" value="Edit" class="edit_button" onclick="toggle_popup_form('{{.Devicename}}')">
                     </td>
                 </tr>
                 {{end}}
             {{end}}
             <!--100 is a magic number for new RLG -->
-            <tr>
+            <tr hidden>
                 <td id="ip100"></td>
                 <td id="scip100"></td>
                 <td id="sclocation100"></td>
@@ -150,7 +249,7 @@
                 <td id="doppport100"></td>
                 <td id="doppip100"></td>
                 <td>
-                    <input type="button" id="edit_button100" value="Add" class="edit_button" onclick="edit_row('100')">
+                    <input hidden type="button" id="edit_button100" value="Add" class="edit_button" onclick="edit_row('100')">
                     <input hidden type='button' id="save_button100" value="Save" class="save_button" onclick="save_row('100')">
                 </td>
             </tr>
@@ -158,6 +257,7 @@
         <h2>E2 Gates</h2>
         <table>
             <tr>
+                <th>Device Name</th>
                 <th>IP</th>
                 <th>SC IP</th>
                 <th>Location</th>
@@ -166,27 +266,33 @@
                 <th>Device Pkg Version</th>
                 <th>RTD Version</th>
                 <th>Plinth</th>
+                <th>Last Update</th>
+                <th>Updated By</th>
+                <th>Comments</th>
             </tr>
             {{range .}}
                 {{if .IsE2Gate}}
                 <tr>
-                    <td id="ip{{.Deviceid}}">{{.Ip}}</td>
-                    <td id="scip{{.Deviceid}}">{{.ParentSc.Ip}}</td>
-                    <td id="sclocation{{.Deviceid}}">{{.ParentSc.Location}}</td>
-                    <td id="scenvironment{{.Deviceid}}">{{.ParentSc.Environment}}</td>
-                    <td id="sctransportmode{{.Deviceid}}">{{.ParentSc.Transportmode}}</td>
-                    <td id="versiondevice{{.Deviceid}}">{{.VersionDevice}}</td>
-                    <td id="versionrtd{{.Deviceid}}">{{.VersionRtd}}</td>
-                    <td id="plinth{{.Deviceid}}">{{.Plinth}}</td>
+                    <td id="devicename{{.Devicename}}">{{.Devicename}}</td>
+                    <td id="ip{{.Devicename}}">{{.Ip}}</td>
+                    <td id="scip{{.Devicename}}">{{.ParentSc.Ip}}</td>
+                    <td id="sclocation{{.Devicename}}">{{.ParentSc.Location}}</td>
+                    <td id="scenvironment{{.Devicename}}">{{.ParentSc.Environment}}</td>
+                    <td id="sctransportmode{{.Devicename}}">{{.ParentSc.Transportmode}}</td>
+                    <td id="versiondevice{{.Devicename}}">{{.VersionDevice}}</td>
+                    <td id="versionrtd{{.Devicename}}">{{.VersionRtd}}</td>
+                    <td id="plinth{{.Devicename}}">{{.Plinth}}</td>
+                    <td id="changetime{{.Devicename}}">{{.Changetime}}</td>
+                    <td id="changeby{{.Devicename}}">{{.Changeby}}</td>
+                    <td id="comment{{.Devicename}}">{{.Comment}}</td>
                     <td>
-                        <input type="button" id="edit_button{{.Deviceid}}" value="Edit" class="edit_button" onclick="edit_row('{{.Deviceid}}')">
-                        <input hidden type='button' id="save_button{{.Deviceid}}" value="Save" class="save_button" onclick="save_row('{{.Deviceid}}')">
+                        <input type="button" id="edit_button{{.Devicename}}" value="Edit" class="edit_button" onclick="toggle_popup_form('{{.Devicename}}')">
                     </td>
                 </tr>
                 {{end}}
             {{end}}
             <!--101 is a magic number for new E2Gate -->
-            <tr>
+            <tr hidden>
                 <td id="ip101"></td>
                 <td id="scip101"></td>
                 <td id="sclocation101"></td>
@@ -196,7 +302,7 @@
                 <td id="versionrtd101"></td>
                 <td id="plinth101"></td>
                 <td>
-                    <input type="button" id="edit_button101" value="Add" class="edit_button" onclick="edit_row('101')">
+                    <input hidden type="button" id="edit_button101" value="Add" class="edit_button" onclick="edit_row('101')">
                     <input hidden type='button' id="save_button101" value="Save" class="save_button" onclick="save_row('101')">
                 </td>
             </tr>
@@ -204,6 +310,7 @@
         <h2>Fixed Location Readers</h2>
         <table>
             <tr>
+                <th>Device Name</th>
                 <th>IP</th>
                 <th>SC IP</th>
                 <th>Location</th>
@@ -214,29 +321,35 @@
                 <th>Plinth</th>
                 <th>DOPP Port</th>
                 <th>DOPP IP</th>
+                <th>Last Update</th>
+                <th>Updated By</th>
+                <th>Comments</th>
             </tr>
             {{range .}}
                 {{if .IsFLR}}
                 <tr>
-                    <td id="ip{{.Deviceid}}">{{.Ip}}</td>
-                    <td id="scip{{.Deviceid}}">{{.ParentSc.Ip}}</td>
-                    <td id="sclocation{{.Deviceid}}">{{.ParentSc.Location}}</td>
-                    <td id="scenvironment{{.Deviceid}}">{{.ParentSc.Environment}}</td>
-                    <td id="sctransportmode{{.Deviceid}}">{{.ParentSc.Transportmode}}</td>
-                    <td id="versiondevice{{.Deviceid}}">{{.VersionDevice}}</td>
-                    <td id="versionrtd{{.Deviceid}}">{{.VersionRtd}}</td>
-                    <td id="plinth{{.Deviceid}}">{{.Plinth}}</td>
-                    <td id="doppport{{.Deviceid}}">{{.DoppPort}}</td>
-                    <td id="doppip{{.Deviceid}}">{{.DoppIp}}</td>
+                    <td id="devicename{{.Devicename}}">{{.Devicename}}</td>
+                    <td id="ip{{.Devicename}}">{{.Ip}}</td>
+                    <td id="scip{{.Devicename}}">{{.ParentSc.Ip}}</td>
+                    <td id="sclocation{{.Devicename}}">{{.ParentSc.Location}}</td>
+                    <td id="scenvironment{{.Devicename}}">{{.ParentSc.Environment}}</td>
+                    <td id="sctransportmode{{.Devicename}}">{{.ParentSc.Transportmode}}</td>
+                    <td id="versiondevice{{.Devicename}}">{{.VersionDevice}}</td>
+                    <td id="versionrtd{{.Devicename}}">{{.VersionRtd}}</td>
+                    <td id="plinth{{.Devicename}}">{{.Plinth}}</td>
+                    <td id="doppport{{.Devicename}}">{{.DoppPort}}</td>
+                    <td id="doppip{{.Devicename}}">{{.DoppIp}}</td>
+                    <td id="changetime{{.Devicename}}">{{.Changetime}}</td>
+                    <td id="changeby{{.Devicename}}">{{.Changeby}}</td>
+                    <td id="comment{{.Devicename}}">{{.Comment}}</td>
                     <td>
-                        <input type="button" id="edit_button{{.Deviceid}}" value="Edit" class="edit_button" onclick="edit_row('{{.Deviceid}}')">
-                        <input hidden type='button' id="save_button{{.Deviceid}}" value="Save" class="save_button" onclick="save_row('{{.Deviceid}}')">
+                        <input type="button" id="edit_button{{.Devicename}}" value="Edit" class="edit_button" onclick="toggle_popup_form('{{.Devicename}}')">
                     </td>
                 </tr>
                 {{end}}
             {{end}}
             <!--102 is a magic number for new FLR -->
-            <tr>
+            <tr hidden>
                 <td id="ip102"></td>
                 <td id="scip102"></td>
                 <td id="sclocation102"></td>
@@ -248,7 +361,7 @@
                 <td id="doppport102"></td>
                 <td id="doppip102"></td>
                 <td>
-                    <input type="button" id="edit_button102" value="Add" class="edit_button" onclick="edit_row('102')">
+                    <input hidden type="button" id="edit_button102" value="Add" class="edit_button" onclick="edit_row('102')">
                     <input hidden type='button' id="save_button102" value="Save" class="save_button" onclick="save_row('102')">
                 </td>
             </tr>
@@ -256,5 +369,29 @@
         <p id="formdummy"></p>
         <p id="formdummy2"></p>
         </form>
+
+        <div id="popupform">
+            <h2 id="editformheading">Editing ...</h2>
+            <div id="editformbody"></div>
+            <form id="formpopup" action="" method="post">
+                <input hidden type="text" id="popupid" name="id"/>
+                <input placeholder ="IP" type="text" class="popuptextbox" id="popupip" name="new_ip"/>
+                <input placeholder ="Parent SC IP" type="text" class="popuptextbox" id="popupscip" name="new_scip"/>
+                <input placeholder ="Device Pkg Version" type="text" class="popuptextbox" id="popupversiondevice" name="new_versiondevice"/>
+                <input placeholder ="RTD Version" type="text" class="popuptextbox" id="popupversionrtd" name="new_versionrtd"/>
+                <input placeholder ="Plinth" type="text" class="popuptextbox" id="popupplinth" name="new_plinth"/>
+                <input hidden placeholder ="EPROM Version (RLG only)" type="text" class="popuptextbox" id="popupversioneprom" name="new_versioneprom"/>
+                <input hidden placeholder ="DOPP IP (CTP only)" type="text" class="popuptextbox" id="popupdoppip" name="new_doppip"/>
+                <input hidden placeholder ="DOPP Port (CTP only)" type="text" class="popuptextbox" id="popupdoppport" name="new_doppport"/>
+                
+                <input placeholder ="Your name(s)" type="text" class="popuptextbox" id="popupchangeby" name="new_changeby" required/>
+                <textarea placeholder="Comment" class="popuptextarea" id="popupcomment" name="new_comment" required></textarea>
+
+                <input class="save_button" type="button" value="Cancel" onclick="cancel_popup_form()">
+                <input class="save_button" type="submit" value="Save" onclick="save_row()">
+                <input hidden type="text" id="popupdevicetype" name="devicetype"/>
+            </form>
+        
+        </div>
     </body>
 </html>
