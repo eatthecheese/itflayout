@@ -46,7 +46,7 @@ type Sc struct {
 	Ip            string
 	Location      string
 	Version       string
-	Nlc           int
+	Nlc           string
 	Scnumber      int
 	Transportmode string
 	Environment   string
@@ -78,8 +78,23 @@ type Device struct {
 	Comment       string
 }
 
+type Dopp struct {
+	ChildDevice *Device
+	DoppId      string
+	DoppKey     string
+	DoppIp      string
+	DoppPort    string
+	DoppNumber  string
+	DoppVersion string
+	Changeby    string
+	Changetime  string
+	Comment     string
+	// Dopp will inherit ChildDeviceName's characteristics
+}
+
 type ScList []Sc
 type DeviceList []Device
+type DoppList []Dopp
 
 func handleIndex(w http.ResponseWriter, req *http.Request) {
 	// below code is from http://www.alexedwards.net/blog/serving-static-sites-with-go
@@ -175,7 +190,8 @@ func handleListOfAllSCs(w http.ResponseWriter, req *http.Request) {
 		updateSc.Ip = newInputs.Get("new_ip")
 		updateSc.Location = newInputs.Get("new_location")
 		updateSc.Version = newInputs.Get("new_version")
-		updateSc.Nlc, _ = strconv.Atoi(newInputs.Get("new_nlc"))
+		//updateSc.Nlc, _ = strconv.Atoi(newInputs.Get("new_nlc"))
+		updateSc.Nlc = newInputs.Get("new_nlc")
 		updateSc.Scnumber, _ = strconv.Atoi(newInputs.Get("new_scnumber"))
 		updateSc.Transportmode = newInputs.Get("new_transportmode")
 		updateSc.Environment = newInputs.Get("new_environment")
@@ -194,7 +210,7 @@ func handleListOfAllSCs(w http.ResponseWriter, req *http.Request) {
 			}
 		*/
 	}
-	// FIX THIS QUERY TO ACCOUNT FOR NEW COLUMN 'SCNAME'
+
 	r, err := db.Query(`select s.scname, s.scid, s.ip, s.location, s.version, s.nlc, s.scnumber, s.transportmode, s.environment, s.priconc, s.secconc, s.changeby, s.changetime, d.devices, ifnull(c.comment, "no comment") as comment
 		from (select *
 		from list_of_scs a
@@ -214,6 +230,68 @@ func handleListOfAllSCs(w http.ResponseWriter, req *http.Request) {
 
 	t, _ := template.ParseFiles("static/templates/table.html")
 	t.Execute(w, listOfScs)
+}
+
+func handleListOfAllDopps(w http.ResponseWriter, req *http.Request) {
+	db, err := testlabConnectDb()
+	if req.Method == "POST" {
+		if err := req.ParseForm(); err != nil {
+			log.Println(err)
+		}
+		updateDopp := Dopp{}
+		updateDoppDevice := Device{}
+		updateDopp.ChildDevice = &updateDoppDevice
+
+		newInputs := req.PostForm
+		updateDopp.DoppKey = newInputs.Get("id") // Get the Dopp Key to be updated
+
+		// Push the DOPP values
+		updateDopp.DoppIp = newInputs.Get("new_doppip")
+		updateDopp.DoppPort = newInputs.Get("new_doppport")
+		updateDopp.DoppNumber = newInputs.Get("new_doppnumber")
+		updateDopp.DoppVersion = newInputs.Get("new_doppversion")
+		updateDopp.ChildDevice.Ip = newInputs.Get("new_deviceip")
+		updateDopp.Changeby = newInputs.Get("new_changeby")
+		updateDopp.Comment = newInputs.Get("new_comment")
+
+		// TODO write updateIntoDopps + updateIntoDoppsComments methods
+		updateIntoDopps(db, updateDopp.DoppIp, updateDopp.DoppPort, updateDopp.DoppNumber, updateDopp.DoppKey, updateDopp.DoppVersion, updateDopp.ChildDevice.Ip, updateDopp.Changeby)
+		updateIntoDoppsComments(db, updateDopp.Comment)
+	}
+
+	r, err := db.Query(`select dopp.doppkey, dopp.doppip, dopp.doppport, dopp.doppnumber, dopp.doppversion, dopp.deviceip, 
+		ifnull(device.location, "SPARE") as location, ifnull(device.nlc, "SPARE") as nlc, ifnull(device.transportmode, "SPARE") as transportmode, 
+		ifnull(device.environment, "SPARE") as environment, ifnull(device.devicetype, "SPARE") as devicetype, 
+		dopp.changeby, dopp.changetime, dopp.comment
+		from
+		(select *
+		from list_of_dopps a
+		left join list_of_dopps_comments c on c.id = a.doppid
+		where changetime=(select max(b.changetime) from list_of_dopps b where a.doppkey=b.doppkey)
+		order by doppip asc) dopp
+		left join
+		(SELECT d.devicename, d.deviceid, d.ip, d.version, d.version_rtd, d.devicetype, d.doppip, d.doppport, d.plinth, d.scip, d.version_eprom,
+		s.location, s.nlc, s.environment, s.transportmode, d.changeby, d.changetime, ifnull(c.comment, "no comment") as comment
+		from
+		(select *
+		from list_of_devices i
+		where changetime=(select max(j.changetime) from list_of_devices j where i.devicename=j.devicename)
+		order by ip asc) d
+		left join list_of_devices_comments c on c.id = d.deviceid,
+		(select ip, location, nlc, environment, transportmode
+		from list_of_scs a
+		where changetime=(select max(b.changetime) from list_of_scs b where a.scname=b.scname)
+		order by ip asc) s
+		where d.scip = s.ip
+		order by d.ip asc) device
+		ON dopp.deviceip = device.ip order by cast(doppkey AS UNSIGNED) asc;`)
+	checkErr(err)
+	defer r.Close()
+	var listOfDopps DoppList = DoppList{}
+	listOfDopps, _ = getListOfDopps(r, listOfDopps)
+
+	t, _ := template.ParseFiles("static/templates/listofdopps.html")
+	t.Execute(w, listOfDopps)
 }
 
 func handleListOfAllBusRigs(w http.ResponseWriter, req *http.Request) {
@@ -288,8 +366,30 @@ func insertIntoScs(db *sql.DB, Ip string, Location string, Version string, Nlc i
 	fmt.Println(resRows, "rows affected")
 }
 
+func updateIntoDopps(db *sql.DB, DoppIp string, DoppPort string, DoppNumber string, DoppKey string, DoppVersion string, DeviceIp string, Changeby string) {
+	// prepare to update some entries into list_of_dopps
+	stmt, err := db.Prepare(`insert into list_of_dopps (doppkey, doppIP, doppPort, doppNumber, doppVersion, deviceIP, changeBy, changeTime)
+							 values (?, ?, ?, ?, ?, ?, ?, now())`)
+	checkErr(err)
+	result, err := stmt.Exec(DoppKey, DoppIp, DoppPort, DoppNumber, DoppVersion, DeviceIp, Changeby)
+	checkErr(err)
+	resRows, _ := result.RowsAffected()
+	fmt.Println(resRows, "rows affected")
+}
+
+func updateIntoDoppsComments(db *sql.DB, Comment string) {
+	// prepare to update some entries into list_of_dopps_comments
+	stmt, err := db.Prepare(`insert into list_of_dopps_comments (comment)
+							 values (?)`)
+	checkErr(err)
+	result, err := stmt.Exec(Comment)
+	checkErr(err)
+	resRows, _ := result.RowsAffected()
+	fmt.Println(resRows, "rows affected")
+}
+
 // Update records in the db - WIP, require data checking conditions
-func updateIntoScs(db *sql.DB, Scname string, Ip string, Location string, Version string, Nlc int, Scnumber int, Transportmode string, Environment string, Priconc string, Secconc string, Changeby string) {
+func updateIntoScs(db *sql.DB, Scname string, Ip string, Location string, Version string, Nlc string, Scnumber int, Transportmode string, Environment string, Priconc string, Secconc string, Changeby string) {
 	// prepare to update some entries into list_of_scs
 	stmt, err := db.Prepare(`insert into list_of_scs (scname, ip, location, version, nlc, scnumber, transportmode, environment, priconc, secconc, changeby, changetime)
 							 values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())`)
@@ -302,7 +402,7 @@ func updateIntoScs(db *sql.DB, Scname string, Ip string, Location string, Versio
 
 // Update List of SCs comments table
 func updateIntoScsComments(db *sql.DB, Comment string) {
-	// prepare to update some entries into list_of_scs
+	// prepare to update some entries into list_of_scs_comments
 	stmt, err := db.Prepare(`insert into list_of_scs_comments (comment)
 							 values (?)`)
 	checkErr(err)
@@ -431,6 +531,25 @@ func getListOfDevices(r *sql.Rows, listOfDevices []Device) (listOfDevicesOut []D
 	return listOfDevices, err
 }
 
+func getListOfDopps(r *sql.Rows, listOfDopps []Dopp) (listOfDoppsOut []Dopp, err error) {
+	for i := 0; r.Next(); i++ {
+		newDopp := Dopp{}
+
+		newDevice := Device{}
+		newDopp.ChildDevice = &newDevice
+		newSc := Sc{}
+		newDevice.ParentSc = &newSc
+
+		err = r.Scan(&newDopp.DoppKey, &newDopp.DoppIp, &newDopp.DoppPort, &newDopp.DoppNumber, &newDopp.DoppVersion, &newDopp.ChildDevice.Ip,
+			&newDopp.ChildDevice.ParentSc.Location, &newDopp.ChildDevice.ParentSc.Nlc, &newDopp.ChildDevice.ParentSc.Transportmode, &newDopp.ChildDevice.ParentSc.Environment,
+			&newDopp.ChildDevice.DeviceType, &newDopp.Changeby, &newDopp.Changetime, &newDopp.Comment)
+		checkErr(err)
+
+		listOfDopps = append(listOfDopps, newDopp)
+	}
+	return listOfDopps, err
+}
+
 func main() {
 	// -------------------------------------
 	// Handle HTML
@@ -445,5 +564,7 @@ func main() {
 	http.HandleFunc("/itf/devices", handleListOfAllDevices)
 	http.HandleFunc("/itf/layout", handleLayout)
 	http.HandleFunc("/itf/busrigs", handleListOfAllBusRigs)
+	http.HandleFunc("/itf/dopps", handleListOfAllDopps)
 	http.ListenAndServe(":8000", nil)
+	//http.HandleFunc("/itf/dopp", handleListOfDopps)
 }

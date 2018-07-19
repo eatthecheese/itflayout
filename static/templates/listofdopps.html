@@ -1,0 +1,209 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>ITF - List of DOPPs</title>
+        <script type="text/javascript">
+        function edit_row(id) {
+     
+        }
+
+        function save_row() {
+            document.getElementById("formpopup").submit();
+        }      
+
+        function show_details(id) {
+            var x = document.getElementById("detailedinfo"+id);
+            if (x.style.display == "block") {
+                x.style.display = "none";
+            } else {
+                x.style.display = "block";
+            }
+        }
+
+        function cancel_popup_form() {
+            var x = document.getElementById("popupform");
+            if (x.style.display == "block") {
+                x.style.display = "none";
+            } else {
+                x.style.display = "block";
+            }
+        }
+
+        function toggle_popup_form(id) {
+            var x = document.getElementById("popupform");
+            if (x.style.display == "block") {
+                x.style.display = "none";
+            } else {
+                x.style.display = "block";
+            }
+
+            var dopp_ip=document.getElementById("ip"+id).innerHTML;
+            var dopp_port=document.getElementById("doppport"+id).innerHTML;
+            var dopp_number=document.getElementById("doppnumber"+id).innerHTML;
+            var cur_ip=document.getElementById("deviceip"+id).innerHTML;
+            var cur_version=document.getElementById("doppversion"+id).innerHTML;
+            var cur_changeby=document.getElementById("changeby"+id).innerHTML;
+            var cur_comment=document.getElementById("comment"+id).innerHTML;
+
+            document.getElementById("editformheading").innerHTML="DOPP " +dopp_ip+", Nr. "+dopp_number+" (DOPP ID " +id+")";
+            document.getElementById("popupid").value=id;
+            document.getElementById("popupdoppip").value=dopp_ip;
+            document.getElementById("popupdoppport").value=dopp_port;
+            document.getElementById("popupdoppnumber").value=dopp_number;
+            document.getElementById("popupdeviceip").value=cur_ip;
+            document.getElementById("popupdoppversion").value=cur_version;
+            document.getElementById("popupchangeby").value=cur_changeby;
+            document.getElementById("popupcomment").value=cur_comment;
+            
+        }
+        </script>
+        <style>
+        h1, h2 {
+            font-family: arial, sans-serif;
+        }
+    
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        td, th {
+            border: 1px solid #dfdcdc;
+            text-align: left;
+            padding: 8px;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .dataheader {
+            text-align:right;
+        }
+
+        .edit_button {
+            border: none;
+            color: white;
+            padding: 4px 8px;
+            background-color: rgb(65,105,225);
+        }
+
+        .edit_button:hover {
+            background-color: rgb(177, 188, 221);
+        }
+
+        .save_button {
+            border: none;
+            color: white;
+            padding: 4px 8px;
+            background-color: rgb(65,105,225);
+        }
+
+        .save_button:hover {
+            background-color: rgb(177, 188, 221);
+        }
+
+        .detailedview {
+            display: none;
+            background-color: rgba(65,105,225, 0.884);
+            position: fixed;
+            padding: 2em;
+            width: 400px;
+            top:50%;
+            left:50%;
+            transform: translate(-50%,-50%);
+            -webkit-transform: translate(-50%,-50%)
+        }
+
+
+        </style>
+        <link rel="stylesheet" type="text/css" href="../static/templates/stylesheets/topnavbar.css">
+        <link rel="stylesheet" type="text/css" href="../static/templates/stylesheets/popupforms.css">
+    </head>
+    <body>
+        <div class="topnav">
+            <a href="/itf/layout">Visual Layout</a>
+            <a href="/itf/">List SCs</a>
+            <a href="/itf/devices">List Gates/FLRs</a>
+            <a href="/itf/busrigs">List BVs</a>
+            <a class="topactive" href="/itf/dopps">List DOPPs</a>
+        </div>
+        <h1>List of DOPPs</h1>
+        <form id="formtable" action="" method="post"><table>
+            <tr>
+                <th>Dopp ID</th>
+                <th>DOPP IP</th>
+                <th>DOPP Port</th>
+                <th>DOPP Number</th>
+                <th>DOPP Version</th>
+                <th>Device IP</th>
+                <th>Location Name</th>
+                <th>NLC</th>
+                <th>Transport Mode</th>
+                <th>Environment</th>
+                <th>Device Type</th>
+                <th>Changed By</th>
+                <th>Change Time</th>
+                <th>Comment</th>
+            </tr>
+            {{range .}}
+            <tr id="row{{.DoppKey}}" class="datarow">
+                <td id="name{{.DoppKey}}"  class="scname">{{.DoppKey}}</td>
+                <td id="ip{{.DoppKey}}">{{.DoppIp}}</td>
+                <td id="doppport{{.DoppKey}}">{{.DoppPort}}</td>
+                <td class="dataheader" id="doppnumber{{.DoppKey}}">{{.DoppNumber}}</td>
+                <td class="dataheader" id="doppversion{{.DoppKey}}">{{.DoppVersion}}</td>
+                <td class="dataheader" id="deviceip{{.DoppKey}}">{{.ChildDevice.Ip}}</td>
+                <td class="dataheader" id="location{{.DoppKey}}">{{.ChildDevice.ParentSc.Location}}</td>
+                <td class="dataheader" id="nlc{{.DoppKey}}">{{.ChildDevice.ParentSc.Nlc}}</td>
+                <td class="dataheader" id="transportmode{{.DoppKey}}">{{.ChildDevice.ParentSc.Transportmode}}</td>
+                <td class="dataheader" id="environment{{.DoppKey}}">{{.ChildDevice.ParentSc.Environment}}</td>
+                <td class="dataheader" id="devicetype{{.DoppKey}}">{{.ChildDevice.DeviceType}}</td>
+                <td class="dataheader" id="changeby{{.DoppKey}}">{{.Changeby}}</td>
+                <td class="dataheader" id="changetime{{.DoppKey}}">{{.Changetime}}</td>
+                <td class="dataheader" id="comment{{.DoppKey}}">{{.Comment}}</td>
+                <td>
+                    <input type='button' id="popup_edit{{.DoppKey}}" value="Edit" class="edit_button" onclick="toggle_popup_form('{{.DoppKey}}')">
+                </td>
+            </tr>
+            {{end}}
+            <!-- '0' is a magic number for a new row, go handler takes care of this -->
+            <tr id="row0">
+                <td id="ip0"></td>
+                <td id="location0"></td>
+                <td id="version0"></td>
+                <td id="nlc0"></td>
+                <td id="scnumber0"></td>
+                <td id="transportmode0"></td>
+                <td id="environment0"></td>
+                <td id="priconc0"></td>
+                <td id="secconc0"></td>
+                <td id="devicesactive0"></td>
+                <td>
+                    <input hidden type="button" id="edit_button0" value="Add" class="edit_button" onclick="edit_row('0')">
+                    <input hidden type="button" id="save_button0" value="Save" class="save_button" onclick="save_row('0')">
+                </td>
+            </tr>
+        </table>
+        <p id="formdummy"></p></form>
+
+        <div id="popupform">
+            <h2 id="editformheading">Editing Something</h2>
+            <form id="formpopup" action="" method="post">
+                <input hidden type="text" id="popupid" name="id"/>
+                <input hidden type="text" id="popupdoppip" name="new_doppip"/>
+                <input hidden type="text" id="popupdoppport" name="new_doppport"/>
+                <input hidden type="text" id="popupdoppnumber" name="new_doppnumber"/>
+                <input placeholder ="DOPP Version"  type="text" class="popuptextbox" id="popupdoppversion" name="new_doppversion"/>
+                <input placeholder ="Device IP" type="text" class="popuptextbox" id="popupdeviceip" name="new_deviceip"/>
+                <input placeholder ="Your name(s)" type="text" class="popuptextbox" id="popupchangeby" name="new_changeby" required/>
+                <textarea placeholder="Comment" class="popuptextarea" id="popupcomment" name="new_comment" required></textarea>
+
+                <input class="save_button" type="button" value="Cancel" onclick="cancel_popup_form()">
+                <input class="save_button" type="submit" value="Save" onclick="save_row()">
+            </form>
+        </div>
+        
+    </body>
+</html>
